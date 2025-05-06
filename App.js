@@ -7,7 +7,7 @@ import Header from './components/Header';
 import ImageViewer from './components/ImageViewer';
 import ActionButtons from './components/ActionButtons';
 import UploadButton from './components/UploadButton';
-import SplashScreen from './intro/SplashScreen';
+import SplashScreen from './components/Intro/SplashScreen';
 import OnboardingScreen from './components/Intro/OnboardingScreen';
 import OnboardingScreenTwo from './components/Intro/OnboardingScreenTwo';
 import OnboardingScreenThree from './components/Intro/OnboardingScreenThree';
@@ -21,6 +21,7 @@ import NotificationsScreen from './components/NotificationsScreen';
 import AccountScreen from './components/AccountScreen';
 import AboutMeScreen from './components/AboutMeScreen';
 import AppVersionScreen from './components/AppVersionScreen';
+import QuickGuide from './components/QuickGuide';
 import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
@@ -221,6 +222,11 @@ export default function App() {
         <Stack.Screen
           name="AppVersionScreen"
           component={AppVersionScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="QuickGuide"
+          component={QuickGuide}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

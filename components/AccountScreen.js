@@ -11,13 +11,19 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 // Account Screen
 const AccountScreen = () => {
   const navigation = useNavigation();
   const [showSignOutModal, setShowSignOutModal] = useState(false);
 
   return (
+    
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <MaterialCommunityIcons name="leaf" size={24} color="white" style={styles.headerIcon} />
+        <Text style={styles.headerTitle}>My EcoSort</Text>
+      </View>
       <View style={styles.profileHeader}>
         <Image
           source={require('../assets/logo.png')} 
@@ -25,10 +31,10 @@ const AccountScreen = () => {
         />
         <Text style={styles.profileName}>Username</Text>
         <Text style={styles.profileEmail}>Email</Text>
-        <View style={styles.pointsContainer}>
+        {/* <View style={styles.pointsContainer}>
           <Text style={styles.pointsIcon}>$</Text>
           <Text style={styles.pointsText}>0 Runtah Points</Text>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.sectionTitle}>
@@ -91,6 +97,32 @@ const AccountScreen = () => {
           <Text style={styles.signOutText}>Sign out</Text>
         </TouchableOpacity>
       </ScrollView>
+      <View style={styles.navigationBar}>
+        <TouchableOpacity style={styles.navItem}>
+          <Image
+            source={require('../assets/home-icon.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} >
+          <Image
+            source={require('../assets/quick-guide-icon.png')} 
+            style={styles.navIcon}
+            
+          />
+          <Text style={styles.navText}>Quick Guide</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} >
+          <Image
+            source={require('../assets/account-icon.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Account</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Sign Out Success Modal */}
       <Modal
@@ -116,7 +148,9 @@ const AccountScreen = () => {
           </View>
         </View>
       </Modal>
+      
     </SafeAreaView>
+    
   );
 };
 
@@ -614,6 +648,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#007AFF',
   },
+  navigationBar: {
+    flexDirection: 'row',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#555',
+  },
+  navText: {
+    fontSize: 12,
+    color: '#555',
+  },
+  header: {
+    backgroundColor: "#16a34a",
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerIcon: {
+    marginRight: 8,
+  },
+  headerTitle: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  
+  
 });
 
 export default AccountScreen;

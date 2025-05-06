@@ -8,7 +8,7 @@ const SplashScreen = ({ navigation }) => {
       <View style={styles.content}>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../assets/logo.png')}
+            source={require('../../assets/logo.png')}
             style={styles.logoImage}
             resizeMode="cover"
           />
@@ -16,7 +16,7 @@ const SplashScreen = ({ navigation }) => {
         <Text style={styles.title}>EcoSort</Text>
         <TouchableOpacity 
           style={styles.nextButton}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('Onboarding')}
         >
           <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreen;
+export default SplashScreen; 
