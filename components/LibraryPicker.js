@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const LibraryPicker = () => {
   const [image, setImage] = useState(null);
@@ -18,11 +19,19 @@ const LibraryPicker = () => {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
+      quality: 0.5,
+      allowsEditing: true,
+      aspect: [1, 1],
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      // Compress the image
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      setImage(manipResult.uri);
       setResult(null);
     }
   };
@@ -48,21 +57,29 @@ const LibraryPicker = () => {
       formData.append('wasteType', 'Plastic');
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
+
+      console.log('Uploading to:', 'https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads');
+      console.log('FormData:', formData);
   
-      const response = await fetch('https://ec88-14-233-228-77.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
           'Accept': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
+          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'multipart/form-data'
         },
+      }).catch(error => {
+        console.error('Fetch error:', error);
+        throw new Error(`Network error: ${error.message}`);
       });
-  
+
+      console.log('Response status:', response.status);
       const responseText = await response.text();
-      console.log('Response:', response.status, responseText);
+      console.log('Response text:', responseText);
   
       if (!response.ok) {
-        throw new Error(`Lỗi ${response.status}: ${responseText}`);
+        throw new Error(`Server error ${response.status}: ${responseText}`);
       }
   
       const data = JSON.parse(responseText);
@@ -87,8 +104,12 @@ const LibraryPicker = () => {
         setResult('Không thể phân loại ảnh');
       }
     } catch (error) {
-      console.error('Upload error:', error.message);
-      Alert.alert("Lỗi", error.message || 'Vui lòng thử lại sau');
+      console.error('Upload error:', error);
+      Alert.alert(
+        "Lỗi",
+        `Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.\n\nChi tiết: ${error.message}`,
+        [{ text: "OK" }]
+      );
       setResult(null);
     } finally {
       setLoading(false);

@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, StatusBa
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as ImageManipulator from 'expo-image-manipulator';
+
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
@@ -31,13 +33,20 @@ const HomeScreen = () => {
     setLoading(true);
 
     try {
-      const uriParts = imageUri.split('.');
+      // Compress the image before uploading
+      const manipResult = await ImageManipulator.manipulateAsync(
+        imageUri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+      );
+
+      const uriParts = manipResult.uri.split('.');
       const fileType = uriParts[uriParts.length - 1];
 
       const formData = new FormData();
 
       formData.append('file', {
-        uri: imageUri,
+        uri: manipResult.uri,
         name: `photo.${fileType}`,
         type: `image/${fileType}`,
       });
@@ -47,20 +56,28 @@ const HomeScreen = () => {
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      const response = await fetch('https://ec88-14-233-228-77.ngrok-free.app/classifications/uploads', {
+      console.log('Uploading to:', 'https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads');
+      console.log('FormData:', formData);
+
+      const response = await fetch('https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
           'Accept': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
+          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'multipart/form-data'
         },
+      }).catch(error => {
+        console.error('Fetch error:', error);
+        throw new Error(`Network error: ${error.message}`);
       });
 
+      console.log('Response status:', response.status);
       const responseText = await response.text();
-      console.log('Response:', response.status, responseText);
+      console.log('Response text:', responseText);
 
       if (!response.ok) {
-        throw new Error(`Lỗi ${response.status}: ${responseText}`);
+        throw new Error(`Server error ${response.status}: ${responseText}`);
       }
 
       const data = JSON.parse(responseText);
@@ -85,8 +102,12 @@ const HomeScreen = () => {
         setResult('Không thể phân loại ảnh');
       }
     } catch (error) {
-      console.error('Upload error:', error.message);
-      Alert.alert("Lỗi", error.message || 'Vui lòng thử lại sau');
+      console.error('Upload error:', error);
+      Alert.alert(
+        "Lỗi",
+        `Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.\n\nChi tiết: ${error.message}`,
+        [{ text: "OK" }]
+      );
       setResult(null);
     } finally {
       setLoading(false);
@@ -155,31 +176,6 @@ const HomeScreen = () => {
               <Text style={styles.menuText}>Pick from library</Text>
             </TouchableOpacity>
 
-            {/* News Option */}
-            <TouchableOpacity style={styles.menuItem} onPress={navigateToNews}>
-              <View style={[styles.iconContainer, styles.newsIcon]}>
-                <Image
-                  source={require('../assets/news-icon.png')}
-                  style={styles.icon}
-                />
-              </View>
-              <Text style={styles.menuText}>News</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Bottom Row */}
-          <View style={styles.menuRow}>
-            {/* FAQ Option */}
-            {/* <TouchableOpacity style={styles.menuItem} onPress={navigateToFAQ}>
-              <View style={[styles.iconContainer, styles.faqIcon]}>
-                <Image 
-                //   source={require('./assets/faq-icon.png')} 
-                  style={styles.icon}
-                />
-              </View>
-              <Text style={styles.menuText}>FAQ</Text>
-            </TouchableOpacity> */}
-
             {/* Guide Option */}
             <TouchableOpacity style={styles.menuItem} onPress={navigateToDosAndDonts}>
               <View style={[styles.iconContainer, styles.guideIcon]}>
@@ -188,10 +184,15 @@ const HomeScreen = () => {
                   style={styles.icon}
                 />
               </View>
-              <Text style={styles.menuText}>Dos & Don'ts </Text>
+              <Text style={styles.menuText}>Dos & Don'ts</Text>
             </TouchableOpacity>
+          </View>
 
+          {/* Bottom Row */}
+          <View style={styles.menuRow}>
             {/* Empty space to balance the grid */}
+            <View style={styles.menuItem}></View>
+            <View style={styles.menuItem}></View>
             <View style={styles.menuItem}></View>
           </View>
         </View>

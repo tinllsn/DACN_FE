@@ -88,12 +88,12 @@ const Stack = createNativeStackNavigator();
 //       formData.append('confidence', '0.95');
 //       formData.append('suggestion', 'Please recycle this');
 
-//       const response = await fetch('https://ec88-14-233-228-77.ngrok-free.app/classifications/uploads', {
+//       const response = await fetch('https://ec88-14-233-228-77.https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads-free.app/classifications/uploads', {
 //         method: 'POST',
 //         body: formData,
 //         headers: {
 //           'Accept': 'application/json',
-//           'ngrok-skip-browser-warning': 'true'
+//           'https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads-skip-browser-warning': 'true'
 //         },
 //       });
 

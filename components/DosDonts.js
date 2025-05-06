@@ -1,13 +1,43 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar, Image, Switch } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const wasteTypes = [
-  { id: 'plastic', name: 'Plastic', color: '#e0f7fa', borderColor: '#00acc1' },
-  { id: 'paper', name: 'Paper', color: '#fff3e0', borderColor: '#fb8c00' },
-  { id: 'glass', name: 'Glass', color: '#fce4ec', borderColor: '#d81b60' },
-  { id: 'metal', name: 'Metal', color: '#e8f5e9', borderColor: '#43a047' },
-  { id: 'organic', name: 'Organic', color: '#e3f2fd', borderColor: '#1e88e5' },
+  { 
+    id: 'plastic', 
+    name: 'Plastic', 
+    color: '#e0f7fa', 
+    borderColor: '#00acc1',
+    image: require('../assets/guide-icon.png')
+  },
+  { 
+    id: 'paper', 
+    name: 'Paper', 
+    color: '#fff3e0', 
+    borderColor: '#fb8c00',
+    image: require('../assets/guide-icon.png')
+  },
+  { 
+    id: 'glass', 
+    name: 'Glass', 
+    color: '#fce4ec', 
+    borderColor: '#d81b60',
+    image: require('../assets/guide-icon.png')
+  },
+  { 
+    id: 'metal', 
+    name: 'Metal', 
+    color: '#e8f5e9', 
+    borderColor: '#43a047',
+    image: require('../assets/guide-icon.png')
+  },
+  { 
+    id: 'organic', 
+    name: 'Organic', 
+    color: '#e3f2fd', 
+    borderColor: '#1e88e5',
+    image: require('../assets/guide-icon.png')
+  },
 ];
 
 const wasteGuides = {
@@ -95,6 +125,7 @@ const wasteGuides = {
 
 const DosDonts = () => {
   const [selectedType, setSelectedType] = useState(null);
+  const [showDos, setShowDos] = useState(true);
   const navigation = useNavigation();
 
   const renderWasteTypeSelection = () => (
@@ -116,6 +147,7 @@ const DosDonts = () => {
             style={[styles.typeButton, { backgroundColor: type.color, borderColor: type.borderColor }]}
             onPress={() => setSelectedType(type.id)}
           >
+            <Image source={type.image} style={styles.typeIcon} />
             <Text style={[styles.typeText, { color: type.borderColor }]}>{type.name}</Text>
           </TouchableOpacity>
         ))}
@@ -126,9 +158,10 @@ const DosDonts = () => {
   const renderGuide = () => {
     const guide = wasteGuides[selectedType];
     const type = wasteTypes.find(t => t.id === selectedType);
+    const backgroundColor = showDos ? '#a4d65e' : '#e88a8a';
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor }]}>
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.backButton}
@@ -140,24 +173,39 @@ const DosDonts = () => {
         </View>
 
         <ScrollView style={styles.scrollView}>
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: type.borderColor }]}>Do's</Text>
-            {guide.dos.map((item, index) => (
-              <View key={index} style={styles.listItem}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.listText}>{item}</Text>
-              </View>
-            ))}
+          <View style={styles.imageContainer}>
+            <Image source={type.image} style={styles.materialImage} />
           </View>
 
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: type.borderColor }]}>Don'ts</Text>
-            {guide.donts.map((item, index) => (
-              <View key={index} style={styles.listItem}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.listText}>{item}</Text>
+          <View style={styles.whiteContainer}>
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>{type.name}</Text>
+              <View style={styles.toggleContainer}>
+                <Text style={[styles.toggleLabel, !showDos && styles.activeToggleLabel]}>Don'ts</Text>
+                <Switch
+                  trackColor={{ false: '#e88a8a', true: '#a4d65e' }}
+                  thumbColor={'#ffffff'}
+                  ios_backgroundColor="#e88a8a"
+                  onValueChange={() => setShowDos(!showDos)}
+                  value={showDos}
+                  style={styles.toggle}
+                />
+                <Text style={[styles.toggleLabel, showDos && styles.activeToggleLabel]}>Dos</Text>
               </View>
-            ))}
+            </View>
+
+            <View style={styles.guidelinesList}>
+              {(showDos ? guide.dos : guide.donts).map((item, index) => (
+                <View key={index} style={styles.guidelineItem}>
+                  <View style={[styles.iconContainer, { backgroundColor: showDos ? '#f0fff0' : '#fff0f0' }]}>
+                    <Text style={[styles.icon, { color: showDos ? 'green' : 'red' }]}>
+                      {showDos ? '♻' : '✕'}
+                    </Text>
+                  </View>
+                  <Text style={styles.guidelineText}>{item}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -202,40 +250,97 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   typeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 20,
     borderRadius: 10,
     marginBottom: 15,
     borderWidth: 1,
     borderStyle: 'dashed',
   },
+  typeIcon: {
+    width: 40,
+    height: 40,
+    marginRight: 15,
+  },
   typeText: {
     fontSize: 18,
     fontWeight: '600',
-    textAlign: 'center',
   },
-  section: {
-    marginBottom: 30,
+  imageContainer: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
+  materialImage: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
   },
-  listItem: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    paddingRight: 20,
-  },
-  bullet: {
-    fontSize: 20,
-    marginRight: 10,
-    color: '#666',
-  },
-  listText: {
-    fontSize: 16,
-    color: '#333',
+  whiteContainer: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 20,
     flex: 1,
-    lineHeight: 24,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 20,
+    padding: 5,
+  },
+  toggle: {
+    marginHorizontal: 5,
+  },
+  toggleLabel: {
+    fontSize: 14,
+    color: '#777',
+    marginHorizontal: 5,
+  },
+  activeToggleLabel: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  guidelinesList: {
+    marginBottom: 20,
+  },
+  guidelineItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+    marginTop: 3,
+  },
+  icon: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  guidelineText: {
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#555',
   },
 });
 

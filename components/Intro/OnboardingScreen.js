@@ -1,53 +1,67 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, StatusBar } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Assuming using Expo
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+  Dimensions,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+const { height } = Dimensions.get('window');
 
 const OnboardingScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      
-      {/* Main content */}
-      <View style={styles.content}>
+
+      {/* Image section */}
+      <View style={styles.imageContainer}>
         <Image
-          source={require('../../assets/OnboardingScreen.jpeg')} 
+          source={require('../../assets/OnboardingScreen.jpeg')}
           style={styles.image}
           resizeMode="cover"
         />
-        
+      </View>
+
+      {/* Content below image */}
+      <View style={styles.content}>
         {/* Pagination dots */}
         <View style={styles.paginationContainer}>
           <View style={[styles.paginationDot, styles.activeDot]} />
           <View style={styles.paginationDot} />
           <View style={styles.paginationDot} />
         </View>
-        
-        {/* Text content */}
+
+        {/* Text */}
         <View style={styles.textContainer}>
           <Text style={styles.title}>Easily Sort{'\n'}Your Waste</Text>
           <Text style={styles.subtitle}>
             Use AI to identify and sort waste the smart way.
           </Text>
         </View>
-      </View>
-      
-      {/* Navigation buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={20} color="#32CD32" />
-          <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.nextButton} 
-          onPress={() => navigation.navigate('OnboardingTwo')}
-        >
-          <Text style={styles.nextButtonText}>Next</Text>
-          <Ionicons name="arrow-forward" size={20} color="white" />
-        </TouchableOpacity>
+        {/* Buttons */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={20} color="#32CD32" />
+            <Text style={styles.backButtonText}>Back</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={() => navigation.navigate('OnboardingTwo')}
+          >
+            <Text style={styles.nextButtonText}>Next</Text>
+            <Ionicons name="arrow-forward" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -56,21 +70,28 @@ const OnboardingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f8f0', // Light green background
+    backgroundColor: '#f0f8f0',
   },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 60,
+  imageContainer: {
+    height: height * 0.45,
+    width: '100%',
+    overflow: 'hidden',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   image: {
     width: '100%',
-    height: 300,
-    marginTop: 20,
+    height: '100%',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    paddingBottom: 20,
   },
   paginationContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 20,
   },
   paginationDot: {
@@ -81,7 +102,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: '#32CD32', // Green color
+    backgroundColor: '#32CD32',
   },
   textContainer: {
     marginTop: 20,
@@ -90,7 +111,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#32CD32', // Green color
+    color: '#32CD32',
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -103,9 +124,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 40,
-    paddingBottom: 40,
     gap: 12,
+    paddingHorizontal: 20,
   },
   backButton: {
     flex: 1,
@@ -127,7 +147,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     flex: 1,
-    backgroundColor: '#32CD32', // Green color
+    backgroundColor: '#32CD32',
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 30,
