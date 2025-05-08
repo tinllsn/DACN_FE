@@ -166,6 +166,7 @@ export const commonStyles = StyleSheet.create({
   linkText: {
     color: colors.primary,
     fontWeight: '600',
+    textAlign: 'center',
   },
   errorText: {
     color: colors.error,
