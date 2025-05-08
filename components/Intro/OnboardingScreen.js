@@ -70,7 +70,7 @@ const OnboardingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f8f0',
+    backgroundColor: 'white',
   },
   imageContainer: {
     height: height * 0.45,

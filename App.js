@@ -3,10 +3,10 @@ import { StyleSheet, View, Alert, Platform, TouchableOpacity } from 'react-nativ
 import * as ImagePicker from 'expo-image-picker';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Header from './components/Header';
-import ImageViewer from './components/ImageViewer';
-import ActionButtons from './components/ActionButtons';
-import UploadButton from './components/UploadButton';
+// import Header from './components/Header';
+// import ImageViewer from './components/ImageViewer';
+// import ActionButtons from './components/ActionButtons';
+// import UploadButton from './components/UploadButton';
 import SplashScreen from './components/Intro/SplashScreen';
 import OnboardingScreen from './components/Intro/OnboardingScreen';
 import OnboardingScreenTwo from './components/Intro/OnboardingScreenTwo';
@@ -23,6 +23,10 @@ import AboutMeScreen from './components/AboutMeScreen';
 import AppVersionScreen from './components/AppVersionScreen';
 import QuickGuide from './components/QuickGuide';
 import { Ionicons } from '@expo/vector-icons';
+import WelcomeScreen from './components/WelcomeScreen';
+import LoginScreen from './components/LoginScreen';
+import SignUpScreen from './components/SignUpScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -229,6 +233,22 @@ export default function App() {
           component={QuickGuide}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="WelcomeScreen"
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />  
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />  
+        <Stack.Screen
+          name="SignUpScreen"
+          component={SignUpScreen}
+          options={{ headerShown: false }}
+        />  
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

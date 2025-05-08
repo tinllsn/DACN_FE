@@ -36,7 +36,7 @@ const GetStartedScreen = ({ navigation }) => {
 
         <TouchableOpacity 
           style={styles.getStartedButton} 
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('WelcomeScreen')}
         >
           <Text style={styles.getStartedButtonText}>Get Started</Text>
           <Ionicons name="arrow-forward" size={20} color="white" />
@@ -49,7 +49,7 @@ const GetStartedScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f8f0',
+    backgroundColor: 'white',
   },
   content: {
     flex: 1,

@@ -7,7 +7,7 @@ import { Feather, MaterialCommunityIcons, Ionicons, AntDesign } from "@expo/vect
 export default function QuickGuide() {
   const [currentTab, setCurrentTab] = useState("welcome")
 
-  const tabs = ["welcome", "image-sorting", "news", "dos-donts"]
+  const tabs = ["welcome", "image-sorting", "dos-donts"]
 
   const goToNextTab = () => {
     const currentIndex = tabs.indexOf(currentTab)
@@ -43,7 +43,7 @@ export default function QuickGuide() {
               <View style={styles.list}>
                 <Text style={styles.listItem}>• Identify waste through camera or gallery images</Text>
                 <Text style={styles.listItem}>• Get sorting recommendations instantly</Text>
-                <Text style={styles.listItem}>• Stay updated with environmental news</Text>
+                {/* <Text style={styles.listItem}>• Stay updated with environmental news</Text> */}
                 <Text style={styles.listItem}>• Learn proper waste management practices</Text>
               </View>
             </View>
@@ -83,32 +83,32 @@ export default function QuickGuide() {
             </View>
           </View>
         )
-      case "news":
-        return (
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>News & Tips</Text>
-              <Text style={styles.cardDescription}>Stay informed about environmental topics</Text>
-            </View>
-            <View style={styles.cardContent}>
-              <View style={styles.iconContainer}>
-                <Feather name="file-text" size={48} color="#16a34a" />
-              </View>
-              <Text style={styles.paragraph}>The News section provides:</Text>
-              <View style={styles.list}>
-                <Text style={styles.listItem}>• Latest environmental news and updates</Text>
-                <Text style={styles.listItem}>• Detailed guides on waste sorting</Text>
-                <Text style={styles.listItem}>• Tips for reducing your environmental footprint</Text>
-                <Text style={styles.listItem}>• Success stories and community initiatives</Text>
-              </View>
-              <View style={styles.tipBox}>
-                <Text style={styles.infoText}>
-                  Check back regularly for new content and seasonal waste management tips!
-                </Text>
-              </View>
-            </View>
-          </View>
-        )
+      // case "news":
+      //   return (
+      //     <View style={styles.card}>
+      //       <View style={styles.cardHeader}>
+      //         <Text style={styles.cardTitle}>News & Tips</Text>
+      //         <Text style={styles.cardDescription}>Stay informed about environmental topics</Text>
+      //       </View>
+      //       <View style={styles.cardContent}>
+      //         <View style={styles.iconContainer}>
+      //           <Feather name="file-text" size={48} color="#16a34a" />
+      //         </View>
+      //         <Text style={styles.paragraph}>The News section provides:</Text>
+      //         <View style={styles.list}>
+      //           <Text style={styles.listItem}>• Latest environmental news and updates</Text>
+      //           <Text style={styles.listItem}>• Detailed guides on waste sorting</Text>
+      //           <Text style={styles.listItem}>• Tips for reducing your environmental footprint</Text>
+      //           <Text style={styles.listItem}>• Success stories and community initiatives</Text>
+      //         </View>
+      //         <View style={styles.tipBox}>
+      //           <Text style={styles.infoText}>
+      //             Check back regularly for new content and seasonal waste management tips!
+      //           </Text>
+      //         </View>
+      //       </View>
+      //     </View>
+      //   )
       case "dos-donts":
         return (
           <View style={styles.card}>
@@ -145,9 +145,9 @@ export default function QuickGuide() {
                   </View>
                 </View>
               </View>
-              <Text style={[styles.paragraph, { marginTop: 16, fontSize: 14 }]}>
+              {/* <Text style={[styles.paragraph, { marginTop: 16, fontSize: 14 }]}>
                 For detailed guidelines on specific items, use the image sorting feature or check the News section.
-              </Text>
+              </Text> */}
             </View>
           </View>
         )
@@ -179,12 +179,12 @@ export default function QuickGuide() {
           >
             <Text style={[styles.tabText, currentTab === "image-sorting" && styles.activeTabText]}>Sorting</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.tab, currentTab === "news" && styles.activeTab]}
             onPress={() => setCurrentTab("news")}
           >
             <Text style={[styles.tabText, currentTab === "news" && styles.activeTabText]}>News</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={[styles.tab, currentTab === "dos-donts" && styles.activeTab]}
             onPress={() => setCurrentTab("dos-donts")}

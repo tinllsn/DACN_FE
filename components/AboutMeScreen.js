@@ -1,621 +1,127 @@
-import React, { useState } from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Switch,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Modal,
-  TextInput
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { commonStyles, colors } from './styles/commonStyles';
 
-// About Me Screen
 const AboutMeScreen = () => {
   const navigation = useNavigation();
-  const [username, setUsername] = useState('Username');
-  const [email, setEmail] = useState('Email');
-  const [phone, setPhone] = useState('+12 345 678');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const userDataString = await AsyncStorage.getItem('userData');
+      if (userDataString) {
+        setUserData(JSON.parse(userDataString));
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView style={commonStyles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity 
-          style={styles.backButton} 
+          style={commonStyles.backButton} 
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text style={commonStyles.backButtonText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>About me</Text>
+        <Text style={styles.headerTitle}>About Me</Text>
       </View>
-      
-      <ScrollView style={styles.formContainer}>
-        <View style={styles.formSection}>
-          <Text style={styles.formSectionTitle}>Personal Details</Text>
-          
-          <View style={styles.inputRow}>
-            <Text style={styles.inputIcon}>👤</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
-            />
+
+      <View style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Personal Information</Text>
+          <View style={styles.infoItem}>
+            <Text style={styles.label}>Username</Text>
+            <Text style={styles.value}>{userData?.username || 'Not set'}</Text>
           </View>
-          
-          <View style={styles.inputRow}>
-            <Text style={styles.inputIcon}>✉️</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-            />
-          </View>
-          
-          <View style={styles.inputRow}>
-            <Text style={styles.inputIcon}>📞</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="+12 345 678"
-              value={phone}
-              onChangeText={setPhone}
-              keyboardType="phone-pad"
-            />
+          <View style={styles.infoItem}>
+            <Text style={styles.label}>Email</Text>
+            <Text style={styles.value}>{userData?.email || 'Not set'}</Text>
           </View>
         </View>
-        
-        <View style={styles.formSection}>
-          <Text style={styles.formSectionTitle}>Change Password</Text>
-          
-          <View style={styles.inputRow}>
-            <Text style={styles.inputIcon}>🔒</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Current password"
-              value={currentPassword}
-              onChangeText={setCurrentPassword}
-              secureTextEntry
-            />
-          </View>
-          
-          <View style={styles.inputRow}>
-            <Text style={styles.inputIcon}>🔒</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="•••••"
-              value={newPassword}
-              onChangeText={setNewPassword}
-              secureTextEntry
-            />
-            <TouchableOpacity style={styles.eyeIcon}>
-              <Text>👁️</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.inputRow}>
-            <Text style={styles.inputIcon}>🔒</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Confirm password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-            />
-          </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Account Settings</Text>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Coming Soon', 'This feature will be available in the next update.')}
+          >
+            <Text style={styles.menuText}>Change Password</Text>
+            <Text style={styles.menuArrow}>›</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Coming Soon', 'This feature will be available in the next update.')}
+          >
+            <Text style={styles.menuText}>Update Profile</Text>
+            <Text style={styles.menuArrow}>›</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-      
-      <TouchableOpacity 
-        style={styles.saveButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.saveButtonText}>Save settings</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  // General styles
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    padding: 16,
+    backgroundColor: colors.primary,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 20,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#32CD32',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backButtonText: {
-    fontSize: 20,
-    color: '#32CD32',
-  },
-
-  // Welcome screen styles
-  welcomeContainer: {
-    flex: 1,
-  },
-  welcomeTop: {
-    flex: 1,
-    backgroundColor: '#32CD32',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 50,
-  },
-  welcomeBottom: {
-    flex: 1,
-    backgroundColor: 'black',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    marginTop: -30,
-    padding: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  welcomeLogo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  welcomeTitle: {
-    fontSize: 42,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  welcomeHeading: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 10,
-  },
-  welcomeSubtitle: {
-    fontSize: 18,
-    color: '#cccccc',
-    textAlign: 'center',
-  },
-  primaryButton: {
-    backgroundColor: '#32CD32',
-    width: '100%',
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  outlineButton: {
-    width: '100%',
-    height: 56,
-    borderRadius: 28,
-    borderWidth: 2,
-    borderColor: '#32CD32',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  outlineButtonText: {
-    color: '#32CD32',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  termsText: {
-    color: '#cccccc',
-    marginTop: 20,
-    textAlign: 'center',
-  },
-  linkText: {
-    color: '#32CD32',
-  },
-
-  // Login and Sign Up styles
-  logoContainer: {
-    alignItems: 'center',
-    marginVertical: 30,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 10,
-  },
-  screenTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#32CD32',
-    marginTop: 10,
-  },
-  socialButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3b5998',
-    height: 50,
-    borderRadius: 25,
-    marginHorizontal: 20,
-    marginBottom: 15,
-  },
-  socialButtonIcon: {
-    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    marginRight: 10,
+    color: colors.white,
+    marginLeft: 16,
   },
-  socialButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    height: 50,
-    borderRadius: 25,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  googleIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  googleButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  orText: {
-    textAlign: 'center',
-    color: '#999',
-    marginVertical: 20,
-  },
-  input: {
-    backgroundColor: '#f5f5f5',
-    height: 50,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    marginHorizontal: 20,
-    marginBottom: 15,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 15,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 10,
-    paddingRight: 15,
-  },
-  validIcon: {
-    color: '#32CD32',
-    fontSize: 20,
-  },
-  eyeIcon: {
-    padding: 5,
-  },
-  forgotPasswordText: {
-    textAlign: 'center',
-    color: '#999',
-    marginTop: 15,
-  },
-  signupPrompt: {
-    position: 'absolute',
-    bottom: 30,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  signupPromptText: {
-    color: '#666',
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    borderColor: '#32CD32',
-  },
-  checkmark: {
-    color: '#32CD32',
-    fontSize: 16,
-  },
-  checkboxLabel: {
-    color: '#666',
-  },
-  privacyLink: {
-    color: '#32CD32',
-  },
-
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 30,
-    alignItems: 'center',
-    width: '80%',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#32CD32',
-    marginBottom: 20,
-  },
-  successIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#32CD32',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  checkmarkLarge: {
-    color: 'white',
-    fontSize: 40,
-  },
-  modalButton: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#32CD32',
-    borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    marginTop: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  modalButtonText: {
-    color: '#32CD32',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-
-  // Account screen styles
-  profileHeader: {
-    backgroundColor: '#f5f7fa',
+  content: {
     padding: 20,
-    alignItems: 'center',
   },
-  profileLogo: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  profileEmail: {
-    color: '#666',
-    marginBottom: 10,
-  },
-  pointsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  pointsIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#f0fff0',
-    borderWidth: 1,
-    borderColor: '#32CD32',
-    textAlign: 'center',
-    lineHeight: 28,
-    marginRight: 10,
-    color: '#32CD32',
-  },
-  pointsText: {
-    fontSize: 16,
-    color: '#32CD32',
-    fontWeight: '600',
+  section: {
+    marginBottom: 24,
   },
   sectionTitle: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 16,
   },
-  sectionTitleText: {
+  infoItem: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  value: {
     fontSize: 16,
-    color: '#666',
-    fontWeight: '600',
-  },
-  menuList: {
-    flex: 1,
+    color: colors.text,
   },
   menuItem: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  menuIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f0fff0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  menuIcon: {
-    fontSize: 20,
+    borderBottomColor: colors.border,
   },
   menuText: {
-    flex: 1,
     fontSize: 16,
+    color: colors.text,
   },
   menuArrow: {
     fontSize: 20,
-    color: '#ccc',
-  },
-  versionText: {
-    color: '#999',
-  },
-  signOutIcon: {
-    backgroundColor: '#fff0f0',
-  },
-  signOutText: {
-    flex: 1,
-    fontSize: 16,
-    color: '#ff3b30',
-  },
-
-  // Form styles
-  formContainer: {
-    flex: 1,
-    backgroundColor: '#f5f7fa',
-  },
-  formSection: {
-    backgroundColor: 'white',
-    margin: 15,
-    borderRadius: 10,
-    padding: 15,
-  },
-  formSectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    paddingVertical: 15,
-  },
-  inputIcon: {
-    fontSize: 20,
-    marginRight: 15,
-    color: '#999',
-  },
-  formInput: {
-    flex: 1,
-    fontSize: 16,
-  },
-  saveButton: {
-    backgroundColor: '#32CD32',
-    margin: 15,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-
-  // Notifications styles
-  notificationsContainer: {
-    flex: 1,
-    backgroundColor: '#f5f7fa',
-    padding: 15,
-  },
-  notificationItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-  notificationTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  notificationDescription: {
-    fontSize: 14,
-    color: '#999',
-    width: '80%',
-  },
-
-  // Version screen styles
-  versionContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  versionLogo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  versionAppName: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#32CD32',
-    marginBottom: 20,
-  },
-  versionNumber: {
-    fontSize: 16,
-    color: '#999',
-    marginBottom: 10,
-  },
-  versionCopyright: {
-    fontSize: 14,
-    color: '#999',
-    marginBottom: 20,
-  },
-  licenseLink: {
-    fontSize: 16,
-    color: '#007AFF',
+    color: colors.textSecondary,
   },
 });
 
