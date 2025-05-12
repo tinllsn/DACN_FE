@@ -37,30 +37,30 @@ const Camera = () => {
 
   const uploadImage = async () => {
     if (!image) return;
-    
+
     setLoading(true);
-    
+
     try {
       const uriParts = image.split('.');
       const fileType = uriParts[uriParts.length - 1];
-  
+
       const formData = new FormData();
-  
+
       formData.append('file', {
         uri: image,
         name: `photo.${fileType}`,
         type: `image/${fileType}`,
       });
-  
+
       formData.append('userId', '1');
       formData.append('wasteType', 'Plastic');
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
-  
-      const response = await fetch('https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads', {
+
+      const response = await fetch('https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
@@ -76,28 +76,31 @@ const Camera = () => {
       console.log('Response status:', response.status);
       const responseText = await response.text();
       console.log('Response text:', responseText);
-  
+
       if (!response.ok) {
         throw new Error(`Server error ${response.status}: ${responseText}`);
       }
-  
+
       const data = JSON.parse(responseText);
       console.log('Parsed data:', data);
-  
-      if (data && data.data) {
-        const result = data.data;
+      console.log('Data:');
+      if (data) {
+        console.log('Data:');
+        // const result = data.data;
+
+        console.log('Result:', result);
         let resultText = '';
-  
-        if (result.classification) {
-          resultText += `Phân loại: ${result.classification}\n`;
+
+        if (data.waste_type) {
+          resultText += `Phân loại: ${data.waste_type}\n`;
         }
-        if (result.confidence) {
-          resultText += `Độ tin cậy: ${(result.confidence * 100).toFixed(2)}%\n`;
+        if (data.confidence) {
+          resultText += `Độ tin cậy: ${(data.confidence * 100).toFixed(2)}%\n`;
         }
-        if (result.recycling_instructions) {
-          resultText += `Hướng dẫn tái chế: ${result.recycling_instructions}`;
-        }
-  
+        // if (data.recycling_instructions) {
+        //   resultText += `Hướng dẫn tái chế: ${data.recycling_instructions}`;
+        // }
+        console.log('Result text:', resultText);
         setResult(resultText);
       } else {
         setResult('Không thể phân loại ảnh');
@@ -118,10 +121,10 @@ const Camera = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      
+
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >

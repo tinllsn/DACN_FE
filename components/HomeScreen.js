@@ -56,10 +56,10 @@ const HomeScreen = () => {
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
 
-      const response = await fetch('https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {

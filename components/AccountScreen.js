@@ -86,7 +86,7 @@ const AccountScreen = () => {
             />
           </View>
           <Text style={styles.userName}>{userData?.username || 'Username'}</Text>
-          <Text style={styles.userEmail}>{userData?.email || 'Email'}</Text>
+          {/* <Text style={styles.userEmail}>{userData?.email || 'Email'}</Text> */}
         </View>
 
         {/* Settings Section */}

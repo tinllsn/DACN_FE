@@ -9,42 +9,25 @@ const auth = require('../middleware/auth');
 router.post('/register', async (req, res) => {
   try {
     console.log('Register request received:', req.body);
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;
 
-    // Check if user already exists
-    let user = await User.findOne({ email });
+    // Check if username already exists
+    let user = await User.findOne({ username });
     if (user) {
-      console.log('User already exists:', email);
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Username already exists' });
     }
 
     // Create new user
     user = new User({
       username,
-      email,
-      password // Password will be hashed by the pre-save middleware
+      password
     });
 
-    // Save user
     await user.save();
-    console.log('User registered successfully:', email);
+    console.log('User registered successfully:', username);
 
-    // Create JWT token
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
+    // Return id and username
+    res.json({ id: user.id, username: user.username });
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
@@ -55,39 +38,22 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     console.log('Login request received:', req.body);
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
-      console.log('User not found:', email);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     // Validate password using the model's method
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      console.log('Invalid password for user:', email);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' },
-      (err, token) => {
-        if (err) throw err;
-        console.log('Login successful for user:', email);
-        res.json({ token });
-      }
-    );
+    // Return id and username
+    res.json({ id: user.id, username: user.username });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Server error', error: err.message });

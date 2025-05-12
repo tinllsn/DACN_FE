@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, TextInput, SafeAreaView, Alert, KeyboardAvoidingView, Platform, ScrollView, Keyboard } from 'react-native';
+import { View, Text, Image, TouchableOpacity, TextInput, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { commonStyles, colors } from './styles/commonStyles';
+import { commonStyles } from './styles/commonStyles';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,77 +10,44 @@ const API_URL = 'http://192.168.1.7:5000/api';
 // Login Screen
 const LoginScreen = () => {
     const navigation = useNavigation();
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const validateForm = () => {
-        if (!email || !password) {
-            setError('Please fill in all fields');
+        if (!username || !password) {
+            setError('Please enter both username and password.');
             return false;
         }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setError('Please enter a valid email address');
-            return false;
-        }
-
-        // Validate password length
         if (password.length < 6) {
-            setError('Password must be at least 6 characters long');
+            setError('Password must be at least 6 characters long.');
             return false;
         }
-
         return true;
     };
 
     const handleLogin = async () => {
         if (!validateForm()) return;
-
         try {
             setLoading(true);
             setError('');
-            
             const response = await axios.post(`${API_URL}/auth/login`, {
-                email,
+                username,
                 password,
             });
-
-            if (response.data.token) {
-                // Lưu token vào AsyncStorage
-                await AsyncStorage.setItem('userToken', response.data.token);
-                
-                // Lấy thông tin user từ token
-                const tokenData = JSON.parse(atob(response.data.token.split('.')[1]));
-                
-                // Gọi API để lấy thông tin user
-                const userResponse = await axios.get(`${API_URL}/auth/user`, {
-                    headers: {
-                        'Authorization': `Bearer ${response.data.token}`
-                    }
-                });
-
-                const userData = {
-                    id: tokenData.user.id,
-                    email: email,
-                    username: userResponse.data.username
-                };
-                
-                await AsyncStorage.setItem('userData', JSON.stringify(userData));
+            if (response.data && response.data.id && response.data.username) {
+                // Lưu userData vào AsyncStorage
+                await AsyncStorage.setItem('userData', JSON.stringify({
+                    id: response.data.id,
+                    username: response.data.username
+                }));
                 navigation.replace('Home');
             } else {
-                throw new Error('No token received');
+                setError('Invalid username or password.');
             }
         } catch (err) {
-            console.error('Login error:', err);
-            if (err.response?.status === 400) {
-                setError('Invalid email or password');
-            } else {
-                setError(err.response?.data?.message || 'Login failed. Please try again.');
-            }
+            setError('Invalid username or password.');
         } finally {
             setLoading(false);
         }
@@ -117,7 +84,7 @@ const LoginScreen = () => {
                             />
                             <Text style={commonStyles.screenTitle}>Welcome Back</Text>
                             <Text style={[commonStyles.signupPromptText, { marginTop: 10 }]}>
-                                You don't have an account yet?{' '}
+                                Don't have an account?{' '}
                                 <Text 
                                     style={commonStyles.linkText}
                                     onPress={() => navigation.navigate('SignUpScreen')}
@@ -131,12 +98,10 @@ const LoginScreen = () => {
                         
                         <TextInput
                             style={[commonStyles.input, { marginBottom: 15 }]}
-                            placeholder="Email address"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
+                            placeholder="Username"
+                            value={username}
+                            onChangeText={setUsername}
                             autoCapitalize="none"
-                            autoComplete="email"
                         />
                         
                         <TextInput
@@ -145,7 +110,6 @@ const LoginScreen = () => {
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
-                            autoComplete="password"
                         />
                         
                         <TouchableOpacity 
@@ -156,10 +120,6 @@ const LoginScreen = () => {
                             <Text style={commonStyles.buttonText}>
                                 {loading ? 'Signing in...' : 'Sign In'}
                             </Text>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={{ marginBottom: 30 }}>
-                            <Text style={commonStyles.linkText}>Forgot your password?</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

@@ -58,10 +58,10 @@ const LibraryPicker = () => {
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
   
-      const response = await fetch('https://73ea-14-236-175-35.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
@@ -84,24 +84,28 @@ const LibraryPicker = () => {
   
       const data = JSON.parse(responseText);
       console.log('Parsed data:', data);
-  
-      if (data && data.data) {
-        const result = data.data;
+      console.log('Data:');
+      if (data ) {
+        console.log('Data:');
+        // const result = data.data;
+
+        console.log('Result:', result);
         let resultText = '';
   
-        if (result.classification) {
-          resultText += `Phân loại: ${result.classification}\n`;
+        if (data.waste_type) {
+          resultText += `Phân loại: ${data.waste_type}\n`;
         }
-        if (result.confidence) {
-          resultText += `Độ tin cậy: ${(result.confidence * 100).toFixed(2)}%\n`;
+        if (data.confidence) {
+          resultText += `Độ tin cậy: ${(data.confidence * 100).toFixed(2)}%\n`;
         }
-        if (result.recycling_instructions) {
-          resultText += `Hướng dẫn tái chế: ${result.recycling_instructions}`;
-        }
-  
+        // if (data.recycling_instructions) {
+        //   resultText += `Hướng dẫn tái chế: ${data.recycling_instructions}`;
+        // }
+        console.log('Result text:', resultText);
         setResult(resultText);
+        
       } else {
-        setResult('Không thể phân loại ảnh');
+        setResult('Không thể phân loại ảnh'); 
       }
     } catch (error) {
       console.error('Upload error:', error);

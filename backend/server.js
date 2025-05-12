@@ -34,6 +34,7 @@ mongoose.connect(MONGODB_URI, {
 });
 
 // Routes
+//các route thực tế
 app.use('/api/auth', require('./routes/auth'));
 
 // Error handling middleware

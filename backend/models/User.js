@@ -9,14 +9,16 @@ const userSchema = new mongoose.Schema({
     minlength: [3, 'Username must be at least 3 characters long'],
     maxlength: [50, 'Username cannot exceed 50 characters']
   },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-    unique: true,
-    trim: true,
-    lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
-  },
+  // email: {
+  //   type: String,
+  //   required: false,
+  //   unique: true,
+  //   trim: true,
+  //   lowercase: true,
+  //   match: [
+  //     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email'
+  //   ]
+  // },
   password: {
     type: String,
     required: [true, 'Password is required'],
@@ -30,7 +32,7 @@ const userSchema = new mongoose.Schema({
 
 // Pre-save middleware to hash password and log user creation
 userSchema.pre('save', async function(next) {
-  console.log('Creating new user:', this.email);
+  console.log('Creating new user:', this.username);
   
   if (!this.isModified('password')) return next();
   
