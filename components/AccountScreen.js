@@ -19,6 +19,14 @@ const AccountScreen = () => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
 
+  const navigateToHomeScreen = () => {
+    navigation.navigate('Home');
+  };
+
+  const navigateToGuide = () => {
+    navigation.navigate('QuickGuide');
+  };
+
   useEffect(() => {
     loadUserData();
   }, []);
@@ -121,6 +129,33 @@ const AccountScreen = () => {
         </View>
 
       </ScrollView>
+      {/* Bottom Navigation Bar */}
+      <View style={styles.navigationBar}>
+        <TouchableOpacity style={styles.navItem} onPress={navigateToHomeScreen}>
+          <Image
+            source={require('../assets/home-icon.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} onPress={navigateToGuide}>
+          <Image
+            source={require('../assets/quick-guide-icon.png')} 
+            style={styles.navIcon}
+            
+          />
+          <Text style={styles.navText}>Quick Guide</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} >
+          <Image
+            source={require('../assets/account-icon.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Account</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -212,6 +247,288 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     color: '#888',
     fontSize: 15,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#f0fdf4",
+  },
+  header: {
+    backgroundColor: "#16a34a",
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerIcon: {
+    marginRight: 8,
+  },
+  headerTitle: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    padding: 16,
+  },
+  tabsContainer: {
+    flexDirection: "row",
+    marginBottom: 16,
+    backgroundColor: "white",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  tab: {
+    flex: 1,
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activeTab: {
+    backgroundColor: "#16a34a",
+  },
+  tabText: {
+    fontSize: 12,
+    color: "#16a34a",
+    fontWeight: "500",
+  },
+  activeTabText: {
+    color: "white",
+  },
+  card: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    overflow: "hidden",
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  cardHeader: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f3f4f6",
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#15803d",
+    marginBottom: 4,
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: "#6b7280",
+  },
+  cardContent: {
+    padding: 16,
+  },
+  iconContainer: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  paragraph: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#374151",
+    marginBottom: 12,
+  },
+  subheading: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+    color: "#374151",
+  },
+  list: {
+    marginBottom: 16,
+  },
+  listItem: {
+    fontSize: 15,
+    lineHeight: 24,
+    color: "#374151",
+    marginBottom: 4,
+  },
+  featureGrid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  featureItem: {
+    flex: 1,
+    backgroundColor: "#dcfce7",
+    padding: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    marginHorizontal: 4,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 8,
+    marginBottom: 4,
+    color: "#374151",
+  },
+  featureDescription: {
+    fontSize: 12,
+    textAlign: "center",
+    color: "#4b5563",
+  },
+  tipBox: {
+    borderLeftWidth: 4,
+    borderLeftColor: "#16a34a",
+    backgroundColor: "#f0fdf4",
+    padding: 12,
+    marginBottom: 16,
+  },
+  tipTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 4,
+    color: "#374151",
+  },
+  tipItem: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#4b5563",
+  },
+  infoBox: {
+    backgroundColor: "#f3f4f6",
+    padding: 12,
+    borderRadius: 8,
+  },
+  infoText: {
+    fontSize: 14,
+    textAlign: "center",
+    color: "#4b5563",
+  },
+  dosAndDontsContainer: {
+    flexDirection: "row",
+    marginBottom: 16,
+  },
+  dosContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#bbf7d0",
+    borderRadius: 8,
+    marginRight: 4,
+  },
+  dontsContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#fecaca",
+    borderRadius: 8,
+    marginLeft: 4,
+  },
+  dosHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#bbf7d0",
+  },
+  dontsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#fecaca",
+  },
+  dosTitle: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#15803d",
+  },
+  dontsTitle: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#b91c1c",
+  },
+  dosList: {
+    padding: 8,
+  },
+  dontsList: {
+    padding: 8,
+  },
+  dosItem: {
+    fontSize: 12,
+    lineHeight: 20,
+    color: "#374151",
+  },
+  dontsItem: {
+    fontSize: 12,
+    lineHeight: 20,
+    color: "#374151",
+  },
+  navigationButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  navButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#16a34a",
+  },
+  nextButton: {
+    backgroundColor: "#16a34a",
+    borderColor: "#16a34a",
+  },
+  navButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#16a34a",
+    marginHorizontal: 4,
+  },
+  nextButtonText: {
+    color: "white",
+  },
+  disabledButton: {
+    borderColor: "#d1d5db",
+    backgroundColor: "#f3f4f6",
+  },
+  disabledButtonText: {
+    color: "#9ca3af",
+  },
+  footer: {
+    backgroundColor: "#16a34a",
+    padding: 12,
+    alignItems: "center",
+  },
+  footerText: {
+    color: "white",
+    fontSize: 14,
+  },
+  navigationBar: {
+    flexDirection: 'row',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#555',
+  },
+  navText: {
+    fontSize: 12,
+    color: '#555',
   },
 });
 

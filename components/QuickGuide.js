@@ -3,8 +3,19 @@
 import { useState } from "react"
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Image } from "react-native"
 import { Feather, MaterialCommunityIcons, Ionicons, AntDesign } from "@expo/vector-icons"
+import { useNavigation } from '@react-navigation/native';
 
 export default function QuickGuide() {
+
+  const navigation = useNavigation();
+  
+  const navigateToHomeScreen = () => {
+    navigation.navigate('Home');
+  };
+
+  const navigateToAccount = () => {
+    navigation.navigate('AccountScreen');
+  };
   const [currentTab, setCurrentTab] = useState("welcome")
 
   const tabs = ["welcome", "image-sorting", "dos-donts"]
@@ -224,7 +235,7 @@ export default function QuickGuide() {
         </View>
       </ScrollView>
       <View style={styles.navigationBar}>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={navigateToHomeScreen}>
           <Image
             source={require('../assets/home-icon.png')}
             style={styles.navIcon}
@@ -241,7 +252,7 @@ export default function QuickGuide() {
           <Text style={styles.navText}>Quick Guide</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem} >
+        <TouchableOpacity style={styles.navItem} onPress={navigateToAccount}>
           <Image
             source={require('../assets/account-icon.png')}
             style={styles.navIcon}

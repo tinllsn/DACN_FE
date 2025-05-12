@@ -126,9 +126,9 @@ const HomeScreen = () => {
     navigation.navigate('QuickGuide');
   };
 
-  const navigateToAccount = () => {
-    // Implementation for account screen
-  };
+  
+
+  
 
   return (
     <View style={styles.container}>
