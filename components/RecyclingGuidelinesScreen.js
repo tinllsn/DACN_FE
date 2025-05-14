@@ -18,7 +18,7 @@ const RecyclingGuidelinesScreen = () => {
     Plastic: {
     //   image: require('./assets/plastic-bottles.png'),
       dos: [
-        'Rinse plastics to remove food and liquid residue.',
+        'hghjbmnRinse plastics to remove food and liquid residue.',
         'Check recycling symbols (1-7) to confirm recyclability.',
         'Separate by type if required by local guidelines.',
         'Follow local rules for what is accepted in recycling bins.',
@@ -60,10 +60,12 @@ const RecyclingGuidelinesScreen = () => {
   };
 
   const currentMaterial = materials[materialType];
-  const backgroundColor = showDos ? '#a4d65e' : '#e88a8a';
+  // const backgroundColor = showDos ? '#a4d65e' : '#e88a8a';
   
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor }]}>
+    // <SafeAreaView style={[styles.container, { backgroundColor }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: '#ffffff' }]}>
+
       <StatusBar barStyle="dark-content" />
       
       {/* Header with back button */}
@@ -141,6 +143,7 @@ const RecyclingGuidelinesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffffff',
   },
   header: {
     height: 60,
@@ -150,15 +153,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   backButtonCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'white',
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   backButtonText: {
-    fontSize: 24,
+    fontSize: 28,
     color: '#555',
   },
   scrollView: {

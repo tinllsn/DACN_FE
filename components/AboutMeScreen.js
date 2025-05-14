@@ -27,10 +27,10 @@ const AboutMeScreen = () => {
     <ScrollView style={commonStyles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity 
-          style={commonStyles.backButton} 
+          style={styles.backButton} 
           onPress={() => navigation.goBack()}
         >
-          <Text style={commonStyles.backButtonText}>←</Text>
+          <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>About Me</Text>
       </View>
@@ -74,14 +74,27 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: colors.primary,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.white,
-    marginLeft: 16,
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 20,
+  },
+  backButton: {
+    width: 50,
+    height: 50,
+    fontSize: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
+  backButtonText: {
+    fontSize: 28,
+    color: '#32CD32',
   },
   content: {
     padding: 20,

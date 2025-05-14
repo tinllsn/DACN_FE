@@ -92,19 +92,26 @@ const AccountScreen = () => {
         {/* Settings Section */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Settings</Text>
-          <TouchableOpacity style={styles.menuRow} onPress={() => navigation.navigate('AboutMeScreen')}>
-            <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="account" size={24} color="#222" />
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('AboutMeScreen')}
+          >
+            <View style={styles.menuIconContainer}>
+              <Text style={styles.menuIcon}>👤</Text>
             </View>
-            <Text style={styles.menuLabel}>About me</Text>
-            <MaterialIcons name="chevron-right" size={22} color="#bbb" style={{ marginLeft: 'auto' }} />
+            <Text style={styles.menuText}>About Me</Text>
+            <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuRow} onPress={() => navigation.navigate('NotificationsScreen')}>
-            <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="bell-outline" size={24} color="#FBC02D" />
+
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('HistoryScreen')}
+          >
+            <View style={styles.menuIconContainer}>
+              <Text style={styles.menuIcon}>📋</Text>
             </View>
-            <Text style={styles.menuLabel}>Notifications</Text>
-            <MaterialIcons name="chevron-right" size={22} color="#bbb" style={{ marginLeft: 'auto' }} />
+            <Text style={styles.menuText}>Recycling History</Text>
+            <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
         </View>
 
@@ -124,7 +131,6 @@ const AccountScreen = () => {
               <MaterialCommunityIcons name="logout" size={24} color="#D32F2F" />
             </View>
             <Text style={[styles.menuLabel, { color: '#D32F2F' }]}>Sign out</Text>
-            {/* <MaterialIcons name="chevron-right" size={22} color="transparent" style={{ marginLeft: 'auto' }} /> */}
           </TouchableOpacity>
         </View>
 
@@ -529,6 +535,38 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 12,
     color: '#555',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+  },
+  menuIconContainer: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#F3FAF2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  menuIcon: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#222',
+  },
+  menuText: {
+    fontSize: 16,
+    color: '#222',
+    fontWeight: '400',
+  },
+  menuArrow: {
+    marginLeft: 'auto',
+    color: '#bbb',
+    fontSize: 14,
   },
 });
 

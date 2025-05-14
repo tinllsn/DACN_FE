@@ -26,7 +26,7 @@ import { Ionicons } from '@expo/vector-icons';
 import WelcomeScreen from './components/WelcomeScreen';
 import LoginScreen from './components/LoginScreen';
 import SignUpScreen from './components/SignUpScreen';
-
+import HistoryScreen from './components/HistoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,12 +92,12 @@ const Stack = createNativeStackNavigator();
 //       formData.append('confidence', '0.95');
 //       formData.append('suggestion', 'Please recycle this');
 
-//       const response = await fetch('https://ec88-14-233-228-77.https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads-free.app/classifications/uploads', {
+//       const response = await fetch('https://ec88-14-233-228-77.https://343f-171-225-185-12.ngrok-free.app/classifications/uploads-free.app/classifications/uploads', {
 //         method: 'POST',
 //         body: formData,
 //         headers: {
 //           'Accept': 'application/json',
-//           'https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads-skip-browser-warning': 'true'
+//           'https://343f-171-225-185-12.ngrok-free.app/classifications/uploads-skip-browser-warning': 'true'
 //         },
 //       });
 
@@ -248,6 +248,11 @@ export default function App() {
           component={SignUpScreen}
           options={{ headerShown: false }}
         />  
+        <Stack.Screen
+          name="HistoryScreen"
+          component={HistoryScreen}
+          options={{ headerShown: false }}
+        />
         
       </Stack.Navigator>
     </NavigationContainer>

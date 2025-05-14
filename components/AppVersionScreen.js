@@ -69,16 +69,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#32CD32',
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   backButtonText: {
-    fontSize: 20,
+    fontSize: 28,
     color: '#32CD32',
   },
 

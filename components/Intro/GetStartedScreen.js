@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     color: '#32CD32',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     marginLeft: 8,
   },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   getStartedButtonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     marginRight: 8,
   },

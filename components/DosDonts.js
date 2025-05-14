@@ -4,124 +4,176 @@ import { useNavigation } from '@react-navigation/native';
 
 const wasteTypes = [
   { 
-    id: 'plastic', 
-    name: 'Plastic', 
+    id: 'inorganic', 
+    name: 'Inorganic', 
     color: '#e0f7fa', 
     borderColor: '#00acc1',
-    image: require('../assets/guide-icon.png')
-  },
-  { 
-    id: 'paper', 
-    name: 'Paper', 
-    color: '#fff3e0', 
-    borderColor: '#fb8c00',
-    image: require('../assets/guide-icon.png')
-  },
-  { 
-    id: 'glass', 
-    name: 'Glass', 
-    color: '#fce4ec', 
-    borderColor: '#d81b60',
-    image: require('../assets/guide-icon.png')
-  },
-  { 
-    id: 'metal', 
-    name: 'Metal', 
-    color: '#e8f5e9', 
-    borderColor: '#43a047',
-    image: require('../assets/guide-icon.png')
+    image: require('../assets/plastic-icon.png')
   },
   { 
     id: 'organic', 
     name: 'Organic', 
-    color: '#e3f2fd', 
-    borderColor: '#1e88e5',
-    image: require('../assets/guide-icon.png')
+    color: '#fff3e0', 
+    borderColor: '#fb8c00',
+    image: require('../assets/organic-icon.png')
   },
+  { 
+    id: 'recyclable', 
+    name: 'Recyclable', 
+    color: '#fce4ec', 
+    borderColor: '#d81b60',
+    image: require('../assets/recyable-icon.png')
+  },
+  // { 
+  //   id: 'metal', 
+  //   name: 'Metal', 
+  //   color: '#e8f5e9', 
+  //   borderColor: '#43a047',
+  //   image: require('../assets/metal-icon.png')
+  // },
+  // { 
+  //   id: 'organic', 
+  //   name: 'Organic', 
+  //   color: '#e3f2fd', 
+  //   borderColor: '#1e88e5',
+  //   image: require('../assets/organic-icon.png')
+  // },
 ];
 
+// const wasteGuides = {
+//   plastic: {
+//     dos: [
+//       'Rinse containers before recycling',
+//       'Remove caps and lids',
+//       'Check for recycling symbols',
+//       'Flatten bottles to save space',
+//       'Separate different types of plastic'
+//     ],
+//     donts: [
+//       'Don\'t recycle plastic bags',
+//       'Don\'t recycle food-contaminated plastic',
+//       'Don\'t recycle mixed materials',
+//       'Don\'t recycle plastic with food residue',
+//       'Don\'t recycle plastic that\'s too small'
+//     ]
+//   },
+//   paper: {
+//     dos: [
+//       'Remove any plastic or metal parts',
+//       'Keep paper dry and clean',
+//       'Flatten cardboard boxes',
+//       'Separate different types of paper',
+//       'Check for recycling symbols'
+//     ],
+//     donts: [
+//       'Don\'t recycle paper with food stains',
+//       'Don\'t recycle paper with wax coating',
+//       'Don\'t recycle paper with plastic coating',
+//       'Don\'t recycle paper with metal staples',
+//       'Don\'t recycle paper with adhesive'
+//     ]
+//   },
+//   glass: {
+//     dos: [
+//       'Rinse containers thoroughly',
+//       'Remove caps and lids',
+//       'Separate by color if required',
+//       'Check for recycling symbols',
+//       'Keep glass clean and dry'
+//     ],
+//     donts: [
+//       'Don\'t recycle broken glass',
+//       'Don\'t recycle glass with food residue',
+//       'Don\'t recycle mixed materials',
+//       'Don\'t recycle heat-resistant glass',
+//       'Don\'t recycle glass with metal parts'
+//     ]
+//   },
+//   metal: {
+//     dos: [
+//       'Rinse containers thoroughly',
+//       'Remove labels if possible',
+//       'Flatten cans to save space',
+//       'Separate different types of metal',
+//       'Check for recycling symbols'
+//     ],
+//     donts: [
+//       'Don\'t recycle metal with food residue',
+//       'Don\'t recycle mixed materials',
+//       'Don\'t recycle metal with plastic coating',
+//       'Don\'t recycle metal with paint',
+//       'Don\'t recycle metal with rust'
+//     ]
+//   },
+//   organic: {
+//     dos: [
+//       'Separate food scraps properly',
+//       'Use compostable bags',
+//       'Keep organic waste dry',
+//       'Mix with dry materials',
+//       'Check local composting guidelines'
+//     ],
+//     donts: [
+//       'Don\'t include meat or dairy',
+//       'Don\'t include pet waste',
+//       'Don\'t include plastic or metal',
+//       'Don\'t include treated wood',
+//       'Don\'t include diseased plants'
+//     ]
+//   }
+// };
+
 const wasteGuides = {
-  plastic: {
+  inorganic: {
     dos: [
-      'Rinse containers before recycling',
-      'Remove caps and lids',
-      'Check for recycling symbols',
-      'Flatten bottles to save space',
-      'Separate different types of plastic'
+      "Place in designated non-recyclable waste bins",
+      "Wrap sharp or hazardous items before disposal",
+      "Separate electronic waste, batteries, and light bulbs",
+      "Label hazardous waste if required",
+      "Follow local disposal guidelines"
     ],
     donts: [
-      'Don\'t recycle plastic bags',
-      'Don\'t recycle food-contaminated plastic',
-      'Don\'t recycle mixed materials',
-      'Don\'t recycle plastic with food residue',
-      'Don\'t recycle plastic that\'s too small'
-    ]
-  },
-  paper: {
-    dos: [
-      'Remove any plastic or metal parts',
-      'Keep paper dry and clean',
-      'Flatten cardboard boxes',
-      'Separate different types of paper',
-      'Check for recycling symbols'
-    ],
-    donts: [
-      'Don\'t recycle paper with food stains',
-      'Don\'t recycle paper with wax coating',
-      'Don\'t recycle paper with plastic coating',
-      'Don\'t recycle paper with metal staples',
-      'Don\'t recycle paper with adhesive'
-    ]
-  },
-  glass: {
-    dos: [
-      'Rinse containers thoroughly',
-      'Remove caps and lids',
-      'Separate by color if required',
-      'Check for recycling symbols',
-      'Keep glass clean and dry'
-    ],
-    donts: [
-      'Don\'t recycle broken glass',
-      'Don\'t recycle glass with food residue',
-      'Don\'t recycle mixed materials',
-      'Don\'t recycle heat-resistant glass',
-      'Don\'t recycle glass with metal parts'
-    ]
-  },
-  metal: {
-    dos: [
-      'Rinse containers thoroughly',
-      'Remove labels if possible',
-      'Flatten cans to save space',
-      'Separate different types of metal',
-      'Check for recycling symbols'
-    ],
-    donts: [
-      'Don\'t recycle metal with food residue',
-      'Don\'t recycle mixed materials',
-      'Don\'t recycle metal with plastic coating',
-      'Don\'t recycle metal with paint',
-      'Don\'t recycle metal with rust'
+      "Don't mix with recyclable or organic waste",
+      "Don't dump electronic waste into regular trash",
+      "Don't dispose of chemicals improperly",
+      "Don't throw broken glass without wrapping it",
+      "Don't overload trash bins"
     ]
   },
   organic: {
     dos: [
-      'Separate food scraps properly',
-      'Use compostable bags',
-      'Keep organic waste dry',
-      'Mix with dry materials',
-      'Check local composting guidelines'
+      "Separate food scraps from other waste",
+      "Use compostable or biodegradable bags",
+      "Keep compost dry and balanced",
+      "Include fruit and vegetable waste, coffee grounds, and eggshells",
+      "Follow local composting rules"
     ],
     donts: [
-      'Don\'t include meat or dairy',
-      'Don\'t include pet waste',
-      'Don\'t include plastic or metal',
-      'Don\'t include treated wood',
-      'Don\'t include diseased plants'
+      "Don't include meat, dairy, or oily foods",
+      "Don't add pet waste",
+      "Don't include plastic, metal, or glass",
+      "Don't compost diseased plants",
+      "Don't use non-biodegradable bags"
+    ]
+  },
+  recyclable: {
+    dos: [
+      "Clean and dry items before recycling",
+      "Separate by material: paper, plastic, metal, and glass",
+      "Check for recycling symbols",
+      "Remove caps, lids, and labels if possible",
+      "Flatten boxes and containers to save space"
+    ],
+    donts: [
+      "Don't recycle contaminated or dirty items",
+      "Don't mix different materials in one item",
+      "Don't include plastic bags unless accepted locally",
+      "Don't recycle broken glass or ceramics",
+      "Don't recycle hazardous or medical waste"
     ]
   }
 };
+
 
 const DosDonts = () => {
   const [selectedType, setSelectedType] = useState(null);
@@ -223,26 +275,32 @@ const DosDonts = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f9fa',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#e9ecef',
+    backgroundColor: '#ffffff',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   backButton: {
     padding: 10,
   },
   backButtonText: {
     fontSize: 16,
-    color: '#32CD32',
+    color: '#2ecc71',
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#32CD32',
+    color: '#2ecc71',
     marginLeft: 20,
   },
   scrollView: {
@@ -253,10 +311,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 15,
     borderWidth: 1,
     borderStyle: 'dashed',
+    backgroundColor: '#ffffff',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   typeIcon: {
     width: 40,
@@ -279,11 +343,16 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   whiteContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 20,
     flex: 1,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   titleRow: {
     flexDirection: 'row',
@@ -292,14 +361,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
   },
   toggleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f8f9fa',
     borderRadius: 20,
     padding: 5,
   },
@@ -331,6 +400,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 15,
     marginTop: 3,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   icon: {
     fontSize: 20,

@@ -20,7 +20,7 @@ const Camera = () => {
     const result = await ImagePicker.launchCameraAsync({
       quality: 0.5,
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [3, 4],
     });
 
     if (!result.canceled) {
@@ -57,10 +57,10 @@ const Camera = () => {
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://343f-171-225-185-12.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
 
-      const response = await fetch('https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://343f-171-225-185-12.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
@@ -83,12 +83,12 @@ const Camera = () => {
 
       const data = JSON.parse(responseText);
       console.log('Parsed data:', data);
-      console.log('Data:');
+      // console.log('Data:');
       if (data) {
-        console.log('Data:');
+        // console.log('Data:');
         // const result = data.data;
 
-        console.log('Result:', result);
+        // console.log('Result:', result);
         let resultText = '';
 
         if (data.waste_type) {

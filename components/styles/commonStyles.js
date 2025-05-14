@@ -20,20 +20,34 @@ export const commonStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  // safeArea: {
+  //   flex: 1,
+  //   backgroundColor: colors.background,
+  // },
+  // backButton: {
+  //   position: 'absolute',
+  //   top: 20,
+  //   left: 20,
+  //   zIndex: 1,
+  //   padding: 10,
+  // },
+  // backButtonText: {
+  //   fontSize: 36,
+  //   color: colors.text,
+  // },
+  backButton: {
+    width: 65,
+    height: 65,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 38,
+    color: colors.primary,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    zIndex: 1,
-    padding: 10,
-  },
-  backButtonText: {
-    fontSize: 36,
-    color: colors.text,
   },
   logoContainer: {
     alignItems: 'center',

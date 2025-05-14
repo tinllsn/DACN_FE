@@ -1,14 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LibraryPicker = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const userDataString = await AsyncStorage.getItem('userData');
+      if (userDataString) {
+        const parsedData = JSON.parse(userDataString);
+        setUserData(parsedData);
+        console.log('User data loaded:', parsedData);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -21,7 +40,7 @@ const LibraryPicker = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.5,
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [3, 4],
     });
 
     if (!result.canceled) {
@@ -52,16 +71,17 @@ const LibraryPicker = () => {
         name: `photo.${fileType}`,
         type: `image/${fileType}`,
       });
-  
-      formData.append('userId', '1');
+      
+      // Sử dụng userData.id thay vì lấy trực tiếp từ AsyncStorage
+      formData.append('userId', userData?.id);
       formData.append('wasteType', 'Plastic');
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://343f-171-225-185-12.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
   
-      const response = await fetch('https://eba3-14-185-225-153.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://343f-171-225-185-12.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {

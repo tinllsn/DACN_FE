@@ -7,7 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons'; // nếu bạn dùng Expo
 
 // Thay đổi localhost thành IP của máy tính của bạn
-const API_URL = 'http://192.168.1.7:5000/api';
+// const API_URL = 'http://192.168.1.7:5000/api';
+const API_URL = 'https://343f-171-225-185-12.ngrok-free.app/auth/register';
 
 // Sign Up Screen
 const SignUpScreen = () => {
@@ -27,8 +28,8 @@ const SignUpScreen = () => {
       setError('Please fill in all required fields.');
       return false;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+    if (password.length < 3) {
+      setError('Password must be at least 3 characters long.');
       return false;
     }
     if (password !== confirmPassword) {
@@ -48,7 +49,9 @@ const SignUpScreen = () => {
     if (!validateForm()) return;
     try {
       setLoading(true);
-      const response = await axios.post(`${API_URL}/auth/register`, {
+      // const response = await axios.post(`${API_URL}/auth/register`, {
+        const response = await axios.post(`${API_URL}`, {
+
         username,
         password,
         email,
@@ -160,7 +163,7 @@ const SignUpScreen = () => {
               autoCapitalize="none"
             /> */}
 
-// TextInput cho Password
+            {/* TextInput cho Password */}
             <View style={[commonStyles.input, { marginBottom: 15, flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 style={{ flex: 1 }}
@@ -178,7 +181,7 @@ const SignUpScreen = () => {
               </TouchableOpacity>
             </View>
 
-// TextInput cho Confirm Password
+            {/* TextInput cho Confirm Password */}
             <View style={[commonStyles.input, { marginBottom: 20, flexDirection: 'row', alignItems: 'center' }]}>
               <TextInput
                 style={{ flex: 1 }}
