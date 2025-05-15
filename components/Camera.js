@@ -1,14 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Camera = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const userDataString = await AsyncStorage.getItem('userData');
+      if (userDataString) {
+        const parsedData = JSON.parse(userDataString);
+        setUserData(parsedData);
+        console.log('User data loaded:', parsedData);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
 
   const takePhoto = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -52,15 +71,15 @@ const Camera = () => {
         type: `image/${fileType}`,
       });
 
-      formData.append('userId', '1');
+      formData.append('userId', userData?.id);
       formData.append('wasteType', 'Plastic');
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://343f-171-225-185-12.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://3f81-113-160-235-47.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
 
-      const response = await fetch('https://343f-171-225-185-12.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://3f81-113-160-235-47.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {

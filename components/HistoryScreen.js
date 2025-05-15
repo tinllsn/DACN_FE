@@ -39,7 +39,7 @@ const HistoryScreen = () => {
         throw new Error('User ID not found');
       }
 
-      const response = await fetch('https://343f-171-225-185-12.ngrok-free.app/classifications/image', {
+      const response = await fetch('https://3f81-113-160-235-47.ngrok-free.app/classifications/image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const HistoryScreen = () => {
       });
       
       const data = await response.json();
-      console.log('History data:', data);
+      // console.log('History data:', data);
       setHistory(data);
       setError(null);
     } catch (err) {
