@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // const API_URL = 'http://192.168.1.7:5000/api';
-const API_URL = 'https://e146-171-225-184-205.ngrok-free.app/auth/login';
+const API_URL = 'https://1c83-171-225-184-205.ngrok-free.app/auth/login';
 
 
 // Login Screen

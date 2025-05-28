@@ -57,7 +57,7 @@ const DosDonts = () => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`https://e146-171-225-184-205.ngrok-free.app/guide/${type}`);
+      const response = await fetch(`https://1c83-171-225-184-205.ngrok-free.app/guide/${type}`);
       if (!response.ok) {
         throw new Error('Failed to fetch guide');
       }

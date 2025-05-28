@@ -40,7 +40,7 @@ const HistoryScreen = () => {
         throw new Error('User ID not found');
       }
 
-      const response = await fetch('https://e146-171-225-184-205.ngrok-free.app/classifications/image', {
+      const response = await fetch('https://1c83-171-225-184-205.ngrok-free.app/classifications/image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const HistoryScreen = () => {
 
   const deleteHistoryItem = async (itemId) => {
     try {
-      const response = await fetch(`https://e146-171-225-184-205.ngrok-free.app/classifications/delete/${itemId}`, {
+      const response = await fetch(`https://1c83-171-225-184-205.ngrok-free.app/classifications/delete/${itemId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
