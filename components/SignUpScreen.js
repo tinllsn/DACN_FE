@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'; // nếu bạn dùng Expo
 
 // Thay đổi localhost thành IP của máy tính của bạn
 // const API_URL = 'http://192.168.1.7:5000/api';
-const API_URL = 'https://976c-113-160-225-159.ngrok-free.app/auth/register';
+const API_URL = 'https://e146-171-225-184-205.ngrok-free.app/auth/register';
 
 // Sign Up Screen
 const SignUpScreen = () => {
@@ -60,7 +60,8 @@ const SignUpScreen = () => {
       if (response.data && response.data.id && response.data.username) {
         await AsyncStorage.setItem('userData', JSON.stringify({
           id: response.data.id,
-          username: response.data.username
+          username: response.data.username,
+          createdAt: response.data.createdAt
         }));
         setSuccess('Registration successful! Please login.');
         setTimeout(() => navigation.navigate('LoginScreen'), 1500);

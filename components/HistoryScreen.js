@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { commonStyles, colors } from './styles/commonStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const HistoryScreen = () => {
   const navigation = useNavigation();
@@ -34,12 +35,12 @@ const HistoryScreen = () => {
   const fetchHistory = async (userId) => {
     try {
       setLoading(true);
-      
+
       if (!userId) {
         throw new Error('User ID not found');
       }
 
-      const response = await fetch('https://976c-113-160-225-159.ngrok-free.app/classifications/image', {
+      const response = await fetch('https://e146-171-225-184-205.ngrok-free.app/classifications/image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,9 +49,8 @@ const HistoryScreen = () => {
           userId: userId
         })
       });
-      
+
       const data = await response.json();
-      // console.log('History data:', data);
       setHistory(data);
       setError(null);
     } catch (err) {
@@ -61,6 +61,45 @@ const HistoryScreen = () => {
     }
   };
 
+  const deleteHistoryItem = async (itemId) => {
+    try {
+      const response = await fetch(`https://e146-171-225-184-205.ngrok-free.app/classifications/delete/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (response.ok) {
+        // Cập nhật lại danh sách sau khi xóa
+        setHistory(history.filter(item => item.id !== itemId));
+      } else {
+        throw new Error('Failed to delete item');
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      Alert.alert('Error', 'Failed to delete item. Please try again.');
+    }
+  };
+
+  const confirmDelete = (item) => {
+    Alert.alert(
+      'Delete Item',
+      'Are you sure you want to delete this item?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => deleteHistoryItem(item.id)
+        }
+      ]
+    );
+  };
+
   const renderHistoryItem = ({ item }) => (
     <View style={styles.historyItem}>
       <View style={styles.itemHeader}>
@@ -69,21 +108,26 @@ const HistoryScreen = () => {
           <View style={styles.confidenceContainer}>
             <Text style={styles.confidenceText}>{Math.round(item.confidence * 100)}%</Text>
             <View style={styles.confidenceBar}>
-              <View 
+              <View
                 style={[
-                  styles.confidenceFill, 
+                  styles.confidenceFill,
                   { width: `${item.confidence * 100}%` }
-                ]} 
+                ]}
               />
             </View>
           </View>
         </View>
-        <Text style={styles.suggestion}>{item.suggestion}</Text>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => confirmDelete(item)}
+        >
+          <MaterialCommunityIcons name="delete" size={24} color="#FF3B30" />
+        </TouchableOpacity>
       </View>
-      
+
       {item.image && (
         <View style={styles.imageContainer}>
-          <Image 
+          <Image
             source={{ uri: `data:image/jpeg;base64,${item.image}` }}
             style={styles.wasteImage}
             resizeMode="cover"
@@ -115,8 +159,8 @@ const HistoryScreen = () => {
   return (
     <View style={commonStyles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={commonStyles.backButton} 
+        <TouchableOpacity
+          style={commonStyles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Text style={commonStyles.backButtonText}>←</Text>
@@ -273,6 +317,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textLight,
     textAlign: 'center',
+  },
+  deleteButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: '#FFE5E5',
   },
 });
 

@@ -1,15 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, StatusBar, ImageBackground, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity, StatusBar, ImageBackground, Alert, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign } from '@expo/vector-icons';
 import * as ImageManipulator from 'expo-image-manipulator';
+import * as Speech from 'expo-speech';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    checkAvailableVoices();
+  }, []);
+
+  const checkAvailableVoices = async () => {
+    try {
+      const voices = await Speech.getAvailableVoicesAsync();
+      // Tìm giọng đọc tiếng Việt
+      const vietnameseVoices = voices.filter(voice =>
+        voice.language.includes('vi') ||
+        voice.name.toLowerCase().includes('vietnamese') ||
+        voice.name.toLowerCase().includes('viet nam')
+      );
+
+      if (vietnameseVoices.length > 0) {
+        console.log('Found Vietnamese voice:', vietnameseVoices[0]);
+      } else {
+        console.log('No Vietnamese voice found');
+      }
+    } catch (error) {
+      console.error('Error checking voices:', error);
+    }
+  };
 
   const navigateToCamera = () => {
     navigation.navigate('Camera');
@@ -25,6 +50,14 @@ const HomeScreen = () => {
 
   const navigateAccountScreen = () => {
     navigation.navigate('AccountScreen');
+  };
+
+  const navigateToGuide = () => {
+    navigation.navigate('QuickGuide');
+  };
+
+  const navigateToQuizGame = () => {
+    navigation.navigate('QuizGame');
   };
 
   const uploadImage = async (imageUri) => {
@@ -56,10 +89,10 @@ const HomeScreen = () => {
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://976c-113-160-225-159.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://e146-171-225-184-205.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
 
-      const response = await fetch('https://976c-113-160-225-159.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://e146-171-225-184-205.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
@@ -98,8 +131,21 @@ const HomeScreen = () => {
         }
 
         setResult(resultText);
+
+        // Speak the result in Vietnamese
+        const speechText = `Phân loại: ${result.classification}. Độ tin cậy: ${(result.confidence * 100).toFixed(2)} phần trăm`;
+        await Speech.speak(speechText, {
+          language: 'vi-VN',
+          pitch: 1.0,
+          rate: 0.9
+        });
       } else {
         setResult('Không thể phân loại ảnh');
+        await Speech.speak('Không thể phân loại ảnh', {
+          language: 'vi-VN',
+          pitch: 1.0,
+          rate: 0.9
+        });
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -114,21 +160,11 @@ const HomeScreen = () => {
     }
   };
 
-  const navigateToNews = () => {
-    // Implementation for news screen
-  };
 
-  const navigateToFAQ = () => {
-    // Implementation for FAQ screen
-  };
 
-  const navigateToGuide = () => {
-    navigation.navigate('QuickGuide');
-  };
 
-  
 
-  
+
 
   return (
     <View style={styles.container}>
@@ -148,7 +184,7 @@ const HomeScreen = () => {
       <View style={styles.curvedBackground}>
         {/* App Title */}
         <Text style={styles.appTitle}>EcoSort</Text>
-        
+
 
         {/* Menu Grid */}
         <View style={styles.menuGrid}>
@@ -186,11 +222,22 @@ const HomeScreen = () => {
               </View>
               <Text style={styles.menuText}>Dos & Don'ts</Text>
             </TouchableOpacity>
+
           </View>
+
 
           {/* Bottom Row */}
           <View style={styles.menuRow}>
-            {/* Empty space to balance the grid */}
+
+            <TouchableOpacity style={styles.menuItem} onPress={navigateToQuizGame}>
+              <View style={[styles.iconContainer, styles.cameraIcon]}>
+                <Image
+                  source={require('../assets/camera-icon.png')}
+                  style={styles.icon}
+                />
+              </View>
+              <Text style={styles.menuText}>QuizGame</Text>
+            </TouchableOpacity>
             <View style={styles.menuItem}></View>
             <View style={styles.menuItem}></View>
             <View style={styles.menuItem}></View>
@@ -217,9 +264,9 @@ const HomeScreen = () => {
 
         <TouchableOpacity style={styles.navItem} onPress={navigateToGuide}>
           <Image
-            source={require('../assets/quick-guide-icon.png')} 
+            source={require('../assets/quick-guide-icon.png')}
             style={styles.navIcon}
-            
+
           />
           <Text style={styles.navText}>Quick Guide</Text>
         </TouchableOpacity>

@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Speech from 'expo-speech';
 
 const LibraryPicker = () => {
   const [image, setImage] = useState(null);
@@ -72,16 +73,15 @@ const LibraryPicker = () => {
         type: `image/${fileType}`,
       });
       
-      // Sử dụng userData.id thay vì lấy trực tiếp từ AsyncStorage
       formData.append('userId', userData?.id);
       formData.append('wasteType', 'Plastic');
       formData.append('confidence', '0.95');
       formData.append('suggestion', 'Please recycle this');
 
-      console.log('Uploading to:', 'https://976c-113-160-225-159.ngrok-free.app/classifications/uploads');
+      console.log('Uploading to:', 'https://e146-171-225-184-205.ngrok-free.app/classifications/uploads');
       console.log('FormData:', formData);
   
-      const response = await fetch('https://976c-113-160-225-159.ngrok-free.app/classifications/uploads', {
+      const response = await fetch('https://e146-171-225-184-205.ngrok-free.app/classifications/uploads', {
         method: 'POST',
         body: formData,
         headers: {
@@ -105,11 +105,8 @@ const LibraryPicker = () => {
       const data = JSON.parse(responseText);
       console.log('Parsed data:', data);
       console.log('Data:');
-      if (data ) {
+      if (data) {
         console.log('Data:');
-        // const result = data.data;
-
-        console.log('Result:', result);
         let resultText = '';
   
         if (data.waste_type) {
@@ -118,14 +115,23 @@ const LibraryPicker = () => {
         if (data.confidence) {
           resultText += `Độ tin cậy: ${(data.confidence * 100).toFixed(2)}%\n`;
         }
-        // if (data.recycling_instructions) {
-        //   resultText += `Hướng dẫn tái chế: ${data.recycling_instructions}`;
-        // }
         console.log('Result text:', resultText);
         setResult(resultText);
         
+        // Speak the result in Vietnamese
+        const speechText = `Phân loại: ${data.waste_type}. Độ tin cậy: ${(data.confidence * 100).toFixed(2)} phần trăm`;
+        await Speech.speak(speechText, {
+          language: 'vi-VN',
+          pitch: 1.0,
+          rate: 0.9
+        });
       } else {
-        setResult('Không thể phân loại ảnh'); 
+        setResult('Không thể phân loại ảnh');
+        await Speech.speak('Không thể phân loại ảnh', {
+          language: 'vi-VN',
+          pitch: 1.0,
+          rate: 0.9
+        });
       }
     } catch (error) {
       console.error('Upload error:', error);

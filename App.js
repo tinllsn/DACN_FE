@@ -27,6 +27,7 @@ import WelcomeScreen from './components/WelcomeScreen';
 import LoginScreen from './components/LoginScreen';
 import SignUpScreen from './components/SignUpScreen';
 import HistoryScreen from './components/HistoryScreen';
+import QuizGame from './components/QuizGame';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,12 +93,12 @@ const Stack = createNativeStackNavigator();
 //       formData.append('confidence', '0.95');
 //       formData.append('suggestion', 'Please recycle this');
 
-//       const response = await fetch('https://ec88-14-233-228-77.https://976c-113-160-225-159.ngrok-free.app/classifications/uploads-free.app/classifications/uploads', {
+//       const response = await fetch('https://ec88-14-233-228-77.https://e146-171-225-184-205.ngrok-free.app/classifications/uploads-free.app/classifications/uploads', {
 //         method: 'POST',
 //         body: formData,
 //         headers: {
 //           'Accept': 'application/json',
-//           'https://976c-113-160-225-159.ngrok-free.app/classifications/uploads-skip-browser-warning': 'true'
+//           'https://e146-171-225-184-205.ngrok-free.app/classifications/uploads-skip-browser-warning': 'true'
 //         },
 //       });
 
@@ -253,7 +254,11 @@ export default function App() {
           component={HistoryScreen}
           options={{ headerShown: false }}
         />
-        
+        <Stack.Screen
+          name="QuizGame"
+          component={QuizGame}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

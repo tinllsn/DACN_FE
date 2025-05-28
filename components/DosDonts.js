@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar, Image, Switch } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar, Image, Switch, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const wasteTypes = [
@@ -24,161 +24,63 @@ const wasteTypes = [
     borderColor: '#d81b60',
     image: require('../assets/recyable-icon.png')
   },
-  // { 
-  //   id: 'metal', 
-  //   name: 'Metal', 
-  //   color: '#e8f5e9', 
-  //   borderColor: '#43a047',
-  //   image: require('../assets/metal-icon.png')
-  // },
-  // { 
-  //   id: 'organic', 
-  //   name: 'Organic', 
-  //   color: '#e3f2fd', 
-  //   borderColor: '#1e88e5',
-  //   image: require('../assets/organic-icon.png')
-  // },
 ];
-
-// const wasteGuides = {
-//   plastic: {
-//     dos: [
-//       'Rinse containers before recycling',
-//       'Remove caps and lids',
-//       'Check for recycling symbols',
-//       'Flatten bottles to save space',
-//       'Separate different types of plastic'
-//     ],
-//     donts: [
-//       'Don\'t recycle plastic bags',
-//       'Don\'t recycle food-contaminated plastic',
-//       'Don\'t recycle mixed materials',
-//       'Don\'t recycle plastic with food residue',
-//       'Don\'t recycle plastic that\'s too small'
-//     ]
-//   },
-//   paper: {
-//     dos: [
-//       'Remove any plastic or metal parts',
-//       'Keep paper dry and clean',
-//       'Flatten cardboard boxes',
-//       'Separate different types of paper',
-//       'Check for recycling symbols'
-//     ],
-//     donts: [
-//       'Don\'t recycle paper with food stains',
-//       'Don\'t recycle paper with wax coating',
-//       'Don\'t recycle paper with plastic coating',
-//       'Don\'t recycle paper with metal staples',
-//       'Don\'t recycle paper with adhesive'
-//     ]
-//   },
-//   glass: {
-//     dos: [
-//       'Rinse containers thoroughly',
-//       'Remove caps and lids',
-//       'Separate by color if required',
-//       'Check for recycling symbols',
-//       'Keep glass clean and dry'
-//     ],
-//     donts: [
-//       'Don\'t recycle broken glass',
-//       'Don\'t recycle glass with food residue',
-//       'Don\'t recycle mixed materials',
-//       'Don\'t recycle heat-resistant glass',
-//       'Don\'t recycle glass with metal parts'
-//     ]
-//   },
-//   metal: {
-//     dos: [
-//       'Rinse containers thoroughly',
-//       'Remove labels if possible',
-//       'Flatten cans to save space',
-//       'Separate different types of metal',
-//       'Check for recycling symbols'
-//     ],
-//     donts: [
-//       'Don\'t recycle metal with food residue',
-//       'Don\'t recycle mixed materials',
-//       'Don\'t recycle metal with plastic coating',
-//       'Don\'t recycle metal with paint',
-//       'Don\'t recycle metal with rust'
-//     ]
-//   },
-//   organic: {
-//     dos: [
-//       'Separate food scraps properly',
-//       'Use compostable bags',
-//       'Keep organic waste dry',
-//       'Mix with dry materials',
-//       'Check local composting guidelines'
-//     ],
-//     donts: [
-//       'Don\'t include meat or dairy',
-//       'Don\'t include pet waste',
-//       'Don\'t include plastic or metal',
-//       'Don\'t include treated wood',
-//       'Don\'t include diseased plants'
-//     ]
-//   }
-// };
-
-const wasteGuides = {
-  inorganic: {
-    dos: [
-      "Place in designated non-recyclable waste bins",
-      "Wrap sharp or hazardous items before disposal",
-      "Separate electronic waste, batteries, and light bulbs",
-      "Label hazardous waste if required",
-      "Follow local disposal guidelines"
-    ],
-    donts: [
-      "Don't mix with recyclable or organic waste",
-      "Don't dump electronic waste into regular trash",
-      "Don't dispose of chemicals improperly",
-      "Don't throw broken glass without wrapping it",
-      "Don't overload trash bins"
-    ]
-  },
-  organic: {
-    dos: [
-      "Separate food scraps from other waste",
-      "Use compostable or biodegradable bags",
-      "Keep compost dry and balanced",
-      "Include fruit and vegetable waste, coffee grounds, and eggshells",
-      "Follow local composting rules"
-    ],
-    donts: [
-      "Don't include meat, dairy, or oily foods",
-      "Don't add pet waste",
-      "Don't include plastic, metal, or glass",
-      "Don't compost diseased plants",
-      "Don't use non-biodegradable bags"
-    ]
-  },
-  recyclable: {
-    dos: [
-      "Clean and dry items before recycling",
-      "Separate by material: paper, plastic, metal, and glass",
-      "Check for recycling symbols",
-      "Remove caps, lids, and labels if possible",
-      "Flatten boxes and containers to save space"
-    ],
-    donts: [
-      "Don't recycle contaminated or dirty items",
-      "Don't mix different materials in one item",
-      "Don't include plastic bags unless accepted locally",
-      "Don't recycle broken glass or ceramics",
-      "Don't recycle hazardous or medical waste"
-    ]
-  }
-};
-
 
 const DosDonts = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [showDos, setShowDos] = useState(true);
+  const [wasteGuides, setWasteGuides] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
+
+  const navigateAccountScreen = () => {
+    navigation.navigate('AccountScreen');
+  };
+
+  const navigateToGuide = () => {
+    navigation.navigate('QuickGuide');
+  };
+
+  const navigateToHomeScreen = () => {
+    navigation.navigate('Home');
+  };
+
+  useEffect(() => {
+    if (selectedType) {
+      fetchGuide(selectedType);
+    }
+  }, [selectedType]);
+
+  const fetchGuide = async (type) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch(`https://e146-171-225-184-205.ngrok-free.app/guide/${type}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch guide');
+      }
+      
+      const data = await response.json();
+      // Phân loại dữ liệu dựa vào trường allowed (boolean)
+      const dos = data.filter(item => item.allowed === true).map(item => item.content);
+      const donts = data.filter(item => item.allowed === false).map(item => item.content);
+      
+      setWasteGuides(prev => ({
+        ...prev,
+        [type]: {
+          dos: dos,
+          donts: donts
+        }
+      }));
+    } catch (err) {
+      console.error('Error fetching guide:', err);
+      setError('Failed to load guide. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const renderWasteTypeSelection = () => (
     <View style={styles.container}>
@@ -211,6 +113,78 @@ const DosDonts = () => {
     const guide = wasteGuides[selectedType];
     const type = wasteTypes.find(t => t.id === selectedType);
     const backgroundColor = showDos ? '#a4d65e' : '#e88a8a';
+
+    if (loading) {
+      return (
+        <View style={[styles.container, { backgroundColor: '#ffffff' }]}>
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => setSelectedType(null)}
+            >
+              <Text style={styles.backButtonText}>← Back</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>{type.name} Guide</Text>
+          </View>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#16a34a" />
+            <Text style={styles.loadingText}>Loading guide...</Text>
+          </View>
+          
+        </View>
+        
+      );
+    }
+
+    if (error) {
+      return (
+        <View style={[styles.container, { backgroundColor: '#ffffff' }]}>
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => setSelectedType(null)}
+            >
+              <Text style={styles.backButtonText}>← Back</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>{type.name} Guide</Text>
+          </View>
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity 
+              style={styles.retryButton}
+              onPress={() => fetchGuide(selectedType)}
+            >
+              <Text style={styles.retryButtonText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+
+    if (!guide || !guide.dos || !guide.donts) {
+      return (
+        <View style={[styles.container, { backgroundColor: '#ffffff' }]}>
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => setSelectedType(null)}
+            >
+              <Text style={styles.backButtonText}>← Back</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>{type.name} Guide</Text>
+          </View>
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>Không tìm thấy hướng dẫn cho loại rác này</Text>
+            <TouchableOpacity 
+              style={styles.retryButton}
+              onPress={() => fetchGuide(selectedType)}
+            >
+              <Text style={styles.retryButtonText}>Thử lại</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
 
     return (
       <View style={[styles.container, { backgroundColor }]}>
@@ -260,7 +234,9 @@ const DosDonts = () => {
             </View>
           </View>
         </ScrollView>
+        
       </View>
+      
     );
   };
 
@@ -268,6 +244,33 @@ const DosDonts = () => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       {selectedType ? renderGuide() : renderWasteTypeSelection()}
+      {/* Bottom Navigation Bar */}
+      <View style={styles.navigationBar}>
+        <TouchableOpacity style={styles.navItem} onPress={navigateToHomeScreen}>
+          <Image
+            source={require('../assets/home-icon.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} onPress={navigateToGuide}>
+          <Image
+            source={require('../assets/quick-guide-icon.png')}
+            style={styles.navIcon}
+
+          />
+          <Text style={styles.navText}>Quick Guide</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} onPress={navigateAccountScreen}>
+          <Image
+            source={require('../assets/account-icon.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Account</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -385,12 +388,17 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   guidelinesList: {
-    marginBottom: 20,
+    marginTop: 20,
+    paddingBottom: 20,
   },
+  
   guidelineItem: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 20,
+    alignItems: 'center',   // căn giữa theo chiều dọc
+    justifyContent: 'center',  // căn giữa theo chiều ngang
+    marginBottom: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
   },
   iconContainer: {
     width: 40,
@@ -414,7 +422,64 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     lineHeight: 22,
+    color: '#333',
+    marginLeft: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#D32F2F',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#16a34a',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  retryButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  navigationBar: {
+    flexDirection: 'row',
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navIcon: {
+    width: 20,
+    height: 20,
+  },
+  navText: {
+    fontSize: 14,
     color: '#555',
+    textAlign: 'center',
   },
 });
 
