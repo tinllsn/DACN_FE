@@ -212,6 +212,23 @@ const HomeScreen = () => {
               <Text style={styles.menuText}>Pick from library</Text>
             </TouchableOpacity>
 
+            
+
+          </View>
+
+
+          {/* Bottom Row */}
+          <View style={styles.menuRow1}>
+
+            <TouchableOpacity style={styles.menuItem} onPress={navigateToQuizGame}>
+              <View style={[styles.iconContainer, styles.cameraIcon]}>
+                <Image
+                  source={require('../assets/quiz-icon.png')}
+                  style={styles.icon}
+                />
+              </View>
+              <Text style={styles.menuText}>QuizGame</Text>
+            </TouchableOpacity>
             {/* Guide Option */}
             <TouchableOpacity style={styles.menuItem} onPress={navigateToDosAndDonts}>
               <View style={[styles.iconContainer, styles.guideIcon]}>
@@ -222,25 +239,9 @@ const HomeScreen = () => {
               </View>
               <Text style={styles.menuText}>Dos & Don'ts</Text>
             </TouchableOpacity>
-
-          </View>
-
-
-          {/* Bottom Row */}
-          <View style={styles.menuRow}>
-
-            <TouchableOpacity style={styles.menuItem} onPress={navigateToQuizGame}>
-              <View style={[styles.iconContainer, styles.cameraIcon]}>
-                <Image
-                  source={require('../assets/camera-icon.png')}
-                  style={styles.icon}
-                />
-              </View>
-              <Text style={styles.menuText}>QuizGame</Text>
-            </TouchableOpacity>
+            {/* <View style={styles.menuItem}></View>
             <View style={styles.menuItem}></View>
-            <View style={styles.menuItem}></View>
-            <View style={styles.menuItem}></View>
+            <View style={styles.menuItem}></View> */}
           </View>
         </View>
 
@@ -326,9 +327,16 @@ const styles = StyleSheet.create({
   },
   menuRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    justifyContent: 'space-evenly',
+    marginBottom: 30,
+    
   },
+  menuRow1: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: 30,
+    
+  },   
   menuItem: {
     width: '30%',
     alignItems: 'center',

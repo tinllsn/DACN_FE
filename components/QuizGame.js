@@ -28,11 +28,12 @@ const QuizGame = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://e146-171-225-184-205.ngrok-free.app/quiz/questions');
+      const response = await fetch('https://e146-171-225-184-205.ngrok-free.app/question/allquestion');
       if (!response.ok) {
         throw new Error('Failed to fetch questions');
       }
       const data = await response.json();
+      console.log('Quiz data:', data); // Debug log
       setQuestions(data);
     } catch (err) {
       console.error('Error fetching questions:', err);
@@ -43,29 +44,59 @@ const QuizGame = () => {
   };
 
   const handleAnswer = (selectedAnswer) => {
-    const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
+    console.log('Selected answer:', selectedAnswer);
+    console.log('Current question:', questions[currentQuestion]);
+    console.log('Correct answer from backend:', questions[currentQuestion].answer);
+    
+    // Convert both values to numbers for comparison
+    const selectedValue = Number(selectedAnswer);
+    const correctValue = Number(questions[currentQuestion].answer);
+    
+    const isCorrect = selectedValue === correctValue;
     
     if (isCorrect) {
       setScore(score + 1);
       Alert.alert(
         'Chính xác! 🎉',
         'Bạn đã trả lời đúng!',
-        [{ text: 'Tiếp tục' }]
+        [{ 
+          text: 'Tiếp tục',
+          onPress: () => {
+            const nextQuestion = currentQuestion + 1;
+            if (nextQuestion < questions.length) {
+              setCurrentQuestion(nextQuestion);
+            } else {
+              setShowScore(true);
+            }
+          }
+        }]
       );
     } else {
       Alert.alert(
         'Chưa đúng! 😢',
-        `Đáp án đúng là: ${questions[currentQuestion].correctAnswer}`,
-        [{ text: 'Tiếp tục' }]
+        `Đáp án đúng là: ${getAnswerLabel(correctValue)}`,
+        [{ 
+          text: 'Tiếp tục',
+          onPress: () => {
+            const nextQuestion = currentQuestion + 1;
+            if (nextQuestion < questions.length) {
+              setCurrentQuestion(nextQuestion);
+            } else {
+              setShowScore(true);
+            }
+          }
+        }]
       );
     }
+  };
 
-    const nextQuestion = currentQuestion + 1;
-    if (nextQuestion < questions.length) {
-      setCurrentQuestion(nextQuestion);
-    } else {
-      setShowScore(true);
-    }
+  const getAnswerLabel = (answerValue) => {
+    const answerMap = {
+      1: 'Rác vô cơ',
+      2: 'Rác hữu cơ',
+      3: 'Rác tái chế'
+    };
+    return answerMap[answerValue] || 'Không xác định';
   };
 
   const restartQuiz = () => {
@@ -145,6 +176,58 @@ const QuizGame = () => {
     );
   }
 
+  // Check if we have valid questions data
+  if (!questions || questions.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+        </View>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Không có câu hỏi nào. Vui lòng thử lại!</Text>
+          <TouchableOpacity 
+            style={styles.retryButton}
+            onPress={fetchQuestions}
+          >
+            <Text style={styles.retryButtonText}>Thử lại</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  const currentQ = questions[currentQuestion];
+  if (!currentQ) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+        </View>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Lỗi hiển thị câu hỏi. Vui lòng thử lại!</Text>
+          <TouchableOpacity 
+            style={styles.retryButton}
+            onPress={restartQuiz}
+          >
+            <Text style={styles.retryButtonText}>Thử lại</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -174,25 +257,29 @@ const QuizGame = () => {
 
         <View style={styles.questionContainer}>
           <Text style={styles.questionText}>
-            {questions[currentQuestion]?.question}
+            {currentQ.question}
           </Text>
           
-          {questions[currentQuestion]?.image && (
+          {currentQ.image && (
             <Image 
-              source={{ uri: questions[currentQuestion].image }}
+              source={{ uri: `data:image/jpeg;base64,${currentQ.image}` }}
               style={styles.questionImage}
               resizeMode="contain"
             />
           )}
 
           <View style={styles.answersContainer}>
-            {questions[currentQuestion]?.answers.map((answer, index) => (
+            {[
+              { value: 1, label: 'Rác vô cơ' },
+              { value: 2, label: 'Rác hữu cơ' },
+              { value: 3, label: 'Rác tái chế' }
+            ].map((answer) => (
               <TouchableOpacity
-                key={index}
+                key={answer.value}
                 style={styles.answerButton}
-                onPress={() => handleAnswer(answer)}
+                onPress={() => handleAnswer(answer.value)}
               >
-                <Text style={styles.answerText}>{answer}</Text>
+                <Text style={styles.answerText}>{answer.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
