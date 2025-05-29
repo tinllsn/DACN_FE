@@ -109,26 +109,25 @@ const Camera = () => {
         let resultText = '';
 
         if (data.waste_type) {
-          resultText += `Phân loại: ${data.waste_type}\n`;
+          resultText += `Classification: ${data.waste_type}\n`;
         }
         if (data.confidence) {
-          resultText += `Độ tin cậy: ${(data.confidence * 100).toFixed(2)}%\n`;
+          resultText += `Confidence: ${(data.confidence * 100).toFixed(2)}%\n`;
         }
         console.log('Result text:', resultText);
         setResult(resultText);
         
-        // Speak the result in Vietnamese
-        const speechText = `Phân loại: ${data.waste_type}. Độ tin cậy: ${(data.confidence * 100).toFixed(2)} phần trăm`;
+        // Speak the result in English
+        const speechText = `Classification: ${data.waste_type}. Confidence: ${(data.confidence * 100).toFixed(2)} percent`;
         await Speech.speak(speechText, {
-          // language: 'vi-VN',
           language: 'en-US',
           pitch: 1.0,
           rate: 0.9
         });
       } else {
-        setResult('Không thể phân loại ảnh');
-        await Speech.speak('Không thể phân loại ảnh', {
-          language: 'vi-VN',
+        setResult('Unable to classify image');
+        await Speech.speak('Unable to classify image', {
+          language: 'en-US',
           pitch: 1.0,
           rate: 0.9
         });
@@ -136,8 +135,8 @@ const Camera = () => {
     } catch (error) {
       console.error('Upload error:', error);
       Alert.alert(
-        "Lỗi",
-        `Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.\n\nChi tiết: ${error.message}`,
+        "Error",
+        `Unable to connect to server. Please check your network connection and try again.\n\nDetails: ${error.message}`,
         [{ text: "OK" }]
       );
       setResult(null);

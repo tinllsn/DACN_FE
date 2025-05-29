@@ -71,7 +71,7 @@ const AboutMeScreen = () => {
       });
 
       if (response.data) {
-        // Cập nhật thông tin trong AsyncStorage
+        // Update information in AsyncStorage
         const updatedUserData = {
           ...userData,
           username: formData.username,

@@ -42,11 +42,11 @@ const LoginScreen = () => {
                 password,
             });
             if (response.data && response.data.id && response.data.username) {
-                // Lưu userData vào AsyncStorage
+                // Save userData to AsyncStorage
                 await AsyncStorage.setItem('userData', JSON.stringify({
                     id: response.data.id,
                     username: response.data.username,
-                    
+
                 }));
                 navigation.replace('Home');
             } else {

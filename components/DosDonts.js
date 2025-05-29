@@ -63,7 +63,7 @@ const DosDonts = () => {
       }
       
       const data = await response.json();
-      // Phân loại dữ liệu dựa vào trường allowed (boolean)
+      // Classify data based on allowed field (boolean)
       const dos = data.filter(item => item.allowed === true).map(item => item.content);
       const donts = data.filter(item => item.allowed === false).map(item => item.content);
       
@@ -110,56 +110,12 @@ const DosDonts = () => {
   );
 
   const renderGuide = () => {
-    const guide = wasteGuides[selectedType];
+    if (!selectedType) {
+      return renderWasteTypeSelection();
+    }
+
     const type = wasteTypes.find(t => t.id === selectedType);
-    const backgroundColor = showDos ? '#a4d65e' : '#e88a8a';
-
-    if (loading) {
-      return (
-        <View style={[styles.container, { backgroundColor: '#ffffff' }]}>
-          <View style={styles.header}>
-            <TouchableOpacity 
-              style={styles.backButton}
-              onPress={() => setSelectedType(null)}
-            >
-              <Text style={styles.backButtonText}>← Back</Text>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>{type.name} Guide</Text>
-          </View>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#16a34a" />
-            <Text style={styles.loadingText}>Loading guide...</Text>
-          </View>
-          
-        </View>
-        
-      );
-    }
-
-    if (error) {
-      return (
-        <View style={[styles.container, { backgroundColor: '#ffffff' }]}>
-          <View style={styles.header}>
-            <TouchableOpacity 
-              style={styles.backButton}
-              onPress={() => setSelectedType(null)}
-            >
-              <Text style={styles.backButtonText}>← Back</Text>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>{type.name} Guide</Text>
-          </View>
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
-            <TouchableOpacity 
-              style={styles.retryButton}
-              onPress={() => fetchGuide(selectedType)}
-            >
-              <Text style={styles.retryButtonText}>Retry</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      );
-    }
+    const guide = wasteGuides[selectedType];
 
     if (!guide || !guide.dos || !guide.donts) {
       return (
@@ -174,12 +130,12 @@ const DosDonts = () => {
             <Text style={styles.headerTitle}>{type.name} Guide</Text>
           </View>
           <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>Không tìm thấy hướng dẫn cho loại rác này</Text>
+            <Text style={styles.errorText}>No guide found for this waste type</Text>
             <TouchableOpacity 
               style={styles.retryButton}
               onPress={() => fetchGuide(selectedType)}
             >
-              <Text style={styles.retryButtonText}>Thử lại</Text>
+              <Text style={styles.retryButtonText}>Try Again</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -187,7 +143,7 @@ const DosDonts = () => {
     }
 
     return (
-      <View style={[styles.container, { backgroundColor }]}>
+      <View style={[styles.container, { backgroundColor: '#ffffff' }]}>
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.backButton}
@@ -243,7 +199,7 @@ const DosDonts = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      {selectedType ? renderGuide() : renderWasteTypeSelection()}
+      {renderGuide()}
       {/* Bottom Navigation Bar */}
       <View style={styles.navigationBar}>
         <TouchableOpacity style={styles.navItem} onPress={navigateToHomeScreen}>

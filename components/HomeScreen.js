@@ -19,7 +19,7 @@ const HomeScreen = () => {
   const checkAvailableVoices = async () => {
     try {
       const voices = await Speech.getAvailableVoicesAsync();
-      // Tìm giọng đọc tiếng Việt
+      // Find Vietnamese voice
       const vietnameseVoices = voices.filter(voice =>
         voice.language.includes('vi') ||
         voice.name.toLowerCase().includes('vietnamese') ||
@@ -121,28 +121,28 @@ const HomeScreen = () => {
         let resultText = '';
 
         if (result.classification) {
-          resultText += `Phân loại: ${result.classification}\n`;
+          resultText += `Classification: ${result.classification}\n`;
         }
         if (result.confidence) {
-          resultText += `Độ tin cậy: ${(result.confidence * 100).toFixed(2)}%\n`;
+          resultText += `Confidence: ${(result.confidence * 100).toFixed(2)}%\n`;
         }
         if (result.recycling_instructions) {
-          resultText += `Hướng dẫn tái chế: ${result.recycling_instructions}`;
+          resultText += `Recycling instructions: ${result.recycling_instructions}`;
         }
 
         setResult(resultText);
 
-        // Speak the result in Vietnamese
-        const speechText = `Phân loại: ${result.classification}. Độ tin cậy: ${(result.confidence * 100).toFixed(2)} phần trăm`;
+        // Speak the result in English
+        const speechText = `Classification: ${result.classification}. Confidence: ${(result.confidence * 100).toFixed(2)} percent`;
         await Speech.speak(speechText, {
-          language: 'vi-VN',
+          language: 'en-US',
           pitch: 1.0,
           rate: 0.9
         });
       } else {
-        setResult('Không thể phân loại ảnh');
-        await Speech.speak('Không thể phân loại ảnh', {
-          language: 'vi-VN',
+        setResult('Unable to classify image');
+        await Speech.speak('Unable to classify image', {
+          language: 'en-US',
           pitch: 1.0,
           rate: 0.9
         });
@@ -150,8 +150,8 @@ const HomeScreen = () => {
     } catch (error) {
       console.error('Upload error:', error);
       Alert.alert(
-        "Lỗi",
-        `Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.\n\nChi tiết: ${error.message}`,
+        "Error",
+        `Unable to connect to server. Please check your network connection and try again.\n\nDetails: ${error.message}`,
         [{ text: "OK" }]
       );
       setResult(null);

@@ -23,7 +23,7 @@ const HistoryScreen = () => {
         const parsedData = JSON.parse(userDataString);
         setUserData(parsedData);
         console.log('User data loaded:', parsedData);
-        // Sau khi load userData thành công, fetch history
+        // After successfully loading userData, fetch history
         fetchHistory(parsedData.id);
       }
     } catch (error) {
@@ -71,7 +71,7 @@ const HistoryScreen = () => {
       });
 
       if (response.ok) {
-        // Cập nhật lại danh sách sau khi xóa
+        // Update list after deletion
         setHistory(history.filter(item => item.id !== itemId));
       } else {
         throw new Error('Failed to delete item');

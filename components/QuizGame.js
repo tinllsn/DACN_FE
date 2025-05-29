@@ -28,7 +28,7 @@ const QuizGame = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://64fc-14-185-225-153.ngrok-free.app/question/allquestion');
+      const response = await fetch('https://1c83-171-225-184-205.ngrok-free.app/question/allquestion');
       if (!response.ok) {
         throw new Error('Failed to fetch questions');
       }
@@ -37,7 +37,7 @@ const QuizGame = () => {
       setQuestions(data);
     } catch (err) {
       console.error('Error fetching questions:', err);
-      setError('Không thể tải câu hỏi. Vui lòng thử lại!');
+      setError('Unable to load questions. Please try again!');
     } finally {
       setLoading(false);
     }
@@ -57,10 +57,10 @@ const QuizGame = () => {
     if (isCorrect) {
       setScore(score + 1);
       Alert.alert(
-        'Chính xác! 🎉',
-        'Bạn đã trả lời đúng!',
+        'Correct! 🎉',
+        'You answered correctly!',
         [{ 
-          text: 'Tiếp tục',
+          text: 'Continue',
           onPress: () => {
             const nextQuestion = currentQuestion + 1;
             if (nextQuestion < questions.length) {
@@ -73,10 +73,10 @@ const QuizGame = () => {
       );
     } else {
       Alert.alert(
-        'Chưa đúng! 😢',
-        `Đáp án đúng là: ${getAnswerLabel(correctValue)}`,
+        'Incorrect! 😢',
+        `The correct answer is: ${getAnswerLabel(correctValue)}`,
         [{ 
-          text: 'Tiếp tục',
+          text: 'Continue',
           onPress: () => {
             const nextQuestion = currentQuestion + 1;
             if (nextQuestion < questions.length) {
@@ -92,11 +92,11 @@ const QuizGame = () => {
 
   const getAnswerLabel = (answerValue) => {
     const answerMap = {
-      1: 'Rác vô cơ',
-      2: 'Rác hữu cơ',
-      3: 'Rác tái chế'
+      1: 'Inorganic waste',
+      2: 'Organic waste',
+      3: 'Recyclable waste'
     };
-    return answerMap[answerValue] || 'Không xác định';
+    return answerMap[answerValue] || 'Unknown';
   };
 
   const restartQuiz = () => {
@@ -115,11 +115,11 @@ const QuizGame = () => {
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+          <Text style={styles.headerTitle}>Waste Sorting Game</Text>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#16a34a" />
-          <Text style={styles.loadingText}>Đang tải câu hỏi...</Text>
+          <Text style={styles.loadingText}>Loading questions...</Text>
         </View>
       </View>
     );
@@ -135,7 +135,7 @@ const QuizGame = () => {
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+          <Text style={styles.headerTitle}>Waste Sorting Game</Text>
         </View>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
@@ -143,7 +143,7 @@ const QuizGame = () => {
             style={styles.retryButton}
             onPress={fetchQuestions}
           >
-            <Text style={styles.retryButtonText}>Thử lại</Text>
+            <Text style={styles.retryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -160,16 +160,16 @@ const QuizGame = () => {
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Kết Quả</Text>
+          <Text style={styles.headerTitle}>Results</Text>
         </View>
         <View style={styles.scoreContainer}>
           <MaterialCommunityIcons name="trophy" size={100} color="#FFD700" />
-          <Text style={styles.scoreTitle}>Chúc mừng! 🎉</Text>
+          <Text style={styles.scoreTitle}>Congratulations! 🎉</Text>
           <Text style={styles.scoreText}>
-            Bạn đã trả lời đúng {score} trên tổng số {questions.length} câu hỏi!
+            You got {score} out of {questions.length} questions correct!
           </Text>
           <TouchableOpacity style={styles.restartButton} onPress={restartQuiz}>
-            <Text style={styles.restartButtonText}>Chơi lại</Text>
+            <Text style={styles.restartButtonText}>Play Again</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -187,15 +187,15 @@ const QuizGame = () => {
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+          <Text style={styles.headerTitle}>Waste Sorting Game</Text>
         </View>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Không có câu hỏi nào. Vui lòng thử lại!</Text>
+          <Text style={styles.errorText}>No questions available. Please try again!</Text>
           <TouchableOpacity 
             style={styles.retryButton}
             onPress={fetchQuestions}
           >
-            <Text style={styles.retryButtonText}>Thử lại</Text>
+            <Text style={styles.retryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -213,15 +213,15 @@ const QuizGame = () => {
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+          <Text style={styles.headerTitle}>Waste Sorting Game</Text>
         </View>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Lỗi hiển thị câu hỏi. Vui lòng thử lại!</Text>
+          <Text style={styles.errorText}>Error displaying question. Please try again!</Text>
           <TouchableOpacity 
             style={styles.retryButton}
             onPress={restartQuiz}
           >
-            <Text style={styles.retryButtonText}>Thử lại</Text>
+            <Text style={styles.retryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -237,13 +237,13 @@ const QuizGame = () => {
         >
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Trò Chơi Phân Loại Rác</Text>
+        <Text style={styles.headerTitle}>Waste Sorting Game</Text>
       </View>
 
       <ScrollView style={styles.scrollView}>
         <View style={styles.progressContainer}>
           <Text style={styles.progressText}>
-            Câu hỏi {currentQuestion + 1}/{questions.length}
+            Question {currentQuestion + 1}/{questions.length}
           </Text>
           <View style={styles.progressBar}>
             <View 
@@ -270,9 +270,9 @@ const QuizGame = () => {
 
           <View style={styles.answersContainer}>
             {[
-              { value: 1, label: 'Rác vô cơ' },
-              { value: 2, label: 'Rác hữu cơ' },
-              { value: 3, label: 'Rác tái chế' }
+              { value: 1, label: 'Inorganic waste' },
+              { value: 2, label: 'Organic waste' },
+              { value: 3, label: 'Recyclable waste' }
             ].map((answer) => (
               <TouchableOpacity
                 key={answer.value}
