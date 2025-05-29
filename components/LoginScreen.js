@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // const API_URL = 'http://192.168.1.7:5000/api';
-const API_URL = 'https://1c83-171-225-184-205.ngrok-free.app/auth/login';
+const API_URL = 'https://64fc-14-185-225-153.ngrok-free.app/auth/login';
 
 
 // Login Screen
@@ -38,7 +38,6 @@ const LoginScreen = () => {
             setError('');
             // const response = await axios.post(`${API_URL}/auth/login`, {
             const response = await axios.post(`${API_URL}`, {
-
                 username,
                 password,
             });

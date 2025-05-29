@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'; // nếu bạn dùng Expo
 
 // Thay đổi localhost thành IP của máy tính của bạn
 // const API_URL = 'http://192.168.1.7:5000/api';
-const API_URL = 'https://1c83-171-225-184-205.ngrok-free.app/auth/register';
+const API_URL = 'https://64fc-14-185-225-153.ngrok-free.app/auth/register';
 
 // Sign Up Screen
 const SignUpScreen = () => {

@@ -1,183 +1,119 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Modal, TextInput, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  Modal,
+  ActivityIndicator,
+  ScrollView
+} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { commonStyles, colors } from './styles/commonStyles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-const API_URL = 'https://1c83-171-225-184-205.ngrok-free.app'; // Thay thế bằng URL ngrok của bạn
 import axios from 'axios';
+
+const API_URL = 'https://64fc-14-185-225-153.ngrok-free.app';
 
 const AboutMeScreen = () => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalType, setModalType] = useState(''); // 'profile' or 'password'
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    password: ''
   });
 
   useEffect(() => {
-    loadUserData();
+    fetchUserData();
   }, []);
 
-  const loadUserData = async () => {
+  const fetchUserData = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      console.log('Token:', token);
-
-      // Luôn gọi API để lấy dữ liệu mới nhất
-      try {
-        const response = await axios.get(`${API_URL}/auth/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        console.log('API response:', response.data);
-        
-        if (response.data) {
-          const userData = {
-            id: response.data._id,
-            username: response.data.username,
-            email: response.data.email
-          };
-          console.log('Setting user data:', userData);
-          await AsyncStorage.setItem('userData', JSON.stringify(userData));
-          setUserData(userData);
-          setFormData({
-            ...formData,
-            username: userData.username || '',
-            email: userData.email || ''
-          });
-        }
-      } catch (apiError) {
-        console.error('Error fetching user profile:', apiError);
-        // Nếu API call thất bại, thử lấy từ AsyncStorage
-        const userDataString = await AsyncStorage.getItem('userData');
-        if (userDataString) {
-          const data = JSON.parse(userDataString);
-          console.log('Loading from storage:', data);
-          setUserData(data);
-          setFormData({
-            ...formData,
-            username: data.username || '',
-            email: data.email || ''
-          });
-        }
+      setLoading(true);
+      const userData = await AsyncStorage.getItem('userData');
+      if (!userData) {
+        Alert.alert('Error', 'Please login again');
+        return;
       }
+      const parsedUserData = JSON.parse(userData);
+      setUserData(parsedUserData);
+      setFormData({
+        username: parsedUserData.username || '',
+        email: parsedUserData.email || '',
+        password: ''
+      });
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error('Fetch user data error:', error);
+      Alert.alert('Error', 'Failed to fetch user data');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUpdateProfile = async () => {
-    if (!formData.username || !formData.email) {
-      Alert.alert('Error', 'Please fill in all required fields');
+    if (!formData.username) {
+      Alert.alert('Error', 'Username is required');
       return;
     }
 
     try {
       setLoading(true);
-      const token = await AsyncStorage.getItem('token');
       const response = await axios.put(`${API_URL}/auth/update`, {
         id: userData.id,
         username: formData.username,
         email: formData.email,
-        password: formData.newPassword || undefined
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        password: formData.password || undefined
       });
 
       if (response.data) {
+        // Cập nhật thông tin trong AsyncStorage
         const updatedUserData = {
-          id: response.data._id,
-          username: response.data.username,
-          email: response.data.email
+          ...userData,
+          username: formData.username,
+          email: formData.email
         };
-        console.log('Updating user data:', updatedUserData);
         await AsyncStorage.setItem('userData', JSON.stringify(updatedUserData));
         setUserData(updatedUserData);
-        setFormData({
-          ...formData,
-          username: response.data.username,
-          email: response.data.email,
-          newPassword: ''
-        });
+        
         Alert.alert('Success', 'Profile updated successfully');
         setModalVisible(false);
-        // Reload user data after update
-        loadUserData();
       }
     } catch (error) {
       console.error('Update profile error:', error);
-      Alert.alert('Error', error.response?.data?.message || 'Failed to update profile');
+      Alert.alert(
+        'Error',
+        error.response?.data?.message || 'Failed to update profile'
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChangePassword = async () => {
-    if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
-      Alert.alert('Error', 'Please fill in all password fields');
-      return;
-    }
-
-    if (formData.newPassword !== formData.confirmPassword) {
-      Alert.alert('Error', 'New passwords do not match');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await axios.put(`${API_URL}/auth/update`, {
-        id: userData.id,
-        currentPassword: formData.currentPassword,
-        newPassword: formData.newPassword
-      });
-
-      if (response.data) {
-        Alert.alert('Success', 'Password changed successfully');
-        setModalVisible(false);
-        setFormData({
-          ...formData,
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        });
-      }
-    } catch (error) {
-      Alert.alert('Error', error.response?.data?.message || 'Failed to change password');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      ...formData,
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    });
-  };
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#4CAF50" />
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={commonStyles.safeArea}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>About Me</Text>
+        <View style={styles.headerLeft}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+          </TouchableOpacity>
+          <Text style={styles.title}>About Me</Text>
+        </View>
       </View>
 
       <View style={styles.content}>
@@ -193,30 +129,12 @@ const AboutMeScreen = () => {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
-          {/* <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => {
-              setModalType('password');
-              setModalVisible(true);
-            }}
-          >
-            <Text style={styles.menuText}>Change Password</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity> */}
-
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => {
-              setModalType('profile');
-              setModalVisible(true);
-            }}
-          >
-            <Text style={styles.menuText}>Update Profile</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.updateButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.updateButtonText}>Update Profile</Text>
+        </TouchableOpacity>
       </View>
 
       <Modal
@@ -244,12 +162,12 @@ const AboutMeScreen = () => {
               keyboardType="email-address"
               autoCapitalize="none"
             />
-
+            
             <TextInput
               style={styles.input}
-              placeholder="New Password (optional)"
-              value={formData.newPassword}
-              onChangeText={(text) => setFormData({...formData, newPassword: text})}
+              placeholder="New Password or Curent Password"
+              value={formData.password}
+              onChangeText={(text) => setFormData({...formData, password: text})}
               secureTextEntry
             />
 
@@ -258,7 +176,11 @@ const AboutMeScreen = () => {
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={() => {
                   setModalVisible(false);
-                  resetForm();
+                  setFormData({
+                    username: userData.username || '',
+                    email: userData.email || '',
+                    password: ''
+                  });
                 }}
               >
                 <Text style={styles.buttonText}>Cancel</Text>
@@ -284,41 +206,57 @@ const AboutMeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 20,
-  },
-  backButton: {
-    width: 50,
-    height: 50,
-    fontSize: 28,
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    
   },
-  backButtonText: {
-    fontSize: 28,
-    color: '#32CD32',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: 'white',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButton: {
+    marginRight: 16,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
   },
   content: {
     padding: 20,
   },
   section: {
-    marginBottom: 24,
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 20,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.text,
+    color: '#333',
     marginBottom: 16,
   },
   infoItem: {
@@ -326,28 +264,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: '#666',
     marginBottom: 4,
   },
   value: {
     fontSize: 16,
-    color: colors.text,
+    color: '#333',
   },
-  menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  updateButton: {
+    backgroundColor: '#4CAF50',
+    padding: 16,
+    borderRadius: 8,
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
-  menuText: {
+  updateButtonText: {
+    color: 'white',
     fontSize: 16,
-    color: colors.text,
-  },
-  menuArrow: {
-    fontSize: 20,
-    color: colors.textSecondary,
+    fontWeight: 'bold',
   },
   modalContainer: {
     flex: 1,

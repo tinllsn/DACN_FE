@@ -14,7 +14,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 
-const API_URL = 'https://1c83-171-225-184-205.ngrok-free.app';
+const API_URL = 'https://64fc-14-185-225-153.ngrok-free.app';
 
 const ProfileManagement = ({ navigation }) => {
   const [loading, setLoading] = useState(false);

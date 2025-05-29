@@ -28,7 +28,7 @@ const QuizGame = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://1c83-171-225-184-205.ngrok-free.app/question/allquestion');
+      const response = await fetch('https://64fc-14-185-225-153.ngrok-free.app/question/allquestion');
       if (!response.ok) {
         throw new Error('Failed to fetch questions');
       }
